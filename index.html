@@ -106,11 +106,26 @@
     border-color:var(--sky-accent); background:rgba(255,255,255,0.13);
     box-shadow:0 0 0 3px rgba(92,200,247,0.22);
   }
+  
+  /* Animasi Error Validasi Input */
+  .input-error {
+    border-color: var(--danger) !important;
+    background: rgba(239, 98, 98, 0.1) !important;
+    box-shadow: 0 0 0 3px rgba(239, 98, 98, 0.2) !important;
+    animation: shake 0.4s ease-in-out;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    50% { transform: translateX(4px); }
+    75% { transform: translateX(-4px); }
+  }
+
   .field select option{color:#0a1a33;}
   .btn{
     border:none; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif;
     font-weight:700; letter-spacing:0.2px; border-radius:14px;
-    transition:transform .15s ease, box-shadow .2s ease, opacity .2s ease;
+    transition:transform .15s ease, box-shadow .2s ease, opacity .2s ease, background-color 0.2s ease;
   }
   .btn:active{transform:scale(0.97);}
   .btn-primary{
@@ -121,12 +136,19 @@
   }
   .btn-primary:hover{box-shadow:0 10px 30px rgba(92,200,247,0.5); transform:translateY(-1px);}
   .btn-primary:disabled{opacity:0.4; cursor:not-allowed; box-shadow:none;}
+  .btn-danger{
+    background:linear-gradient(135deg, var(--danger), #ff8f8f); color:#fff;
+    box-shadow:0 8px 24px rgba(239,98,98,0.35);
+  }
+  .btn-danger:hover{box-shadow:0 10px 30px rgba(239,98,98,0.5);}
+  
   .btn-ghost{
     padding:12px 20px; font-size:14px; color:#dce9fb;
     background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.25) !important;
   }
   .btn-ghost:hover{background:rgba(255,255,255,0.15);}
-  .error-msg{color:#ffb3b3; font-size:12.5px; margin-top:-8px; margin-bottom:14px; text-align:left; min-height:16px;}
+  .error-msg{color:#ffb3b3; font-size:12.5px; margin-top:-8px; margin-bottom:14px; text-align:left; min-height:16px; opacity:0; transition:opacity 0.2s;}
+  .error-msg.show{opacity:1;}
 
   /* ---------- Instructions ---------- */
   .pill{padding:6px 14px; border-radius:999px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.25); font-size:12px; font-weight:600; color:#cfe3fb;}
@@ -270,13 +292,13 @@
     position:fixed; top:24px; left:50%; transform:translateX(-50%) translateY(-20px);
     padding:14px 22px; border-radius:16px; font-size:13.5px; font-weight:600;
     background:rgba(239,98,98,0.22); border:1px solid rgba(239,98,98,0.55); color:#ffd9d9;
-    z-index:999; opacity:0; transition:all .35s ease; pointer-events:none;
+    z-index:9999; opacity:0; transition:all .35s ease; pointer-events:none;
     backdrop-filter:blur(16px);
   }
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
 
   /* modal overlays */
-  .modal-overlay{position:fixed; inset:0; background:rgba(5,12,28,0.65); backdrop-filter:blur(8px); display:none; align-items:center; justify-content:center; z-index:900; opacity:0; transition:opacity .35s ease;}
+  .modal-overlay{position:fixed; inset:0; background:rgba(5,12,28,0.65); backdrop-filter:blur(8px); display:none; align-items:center; justify-content:center; z-index:9000; opacity:0; transition:opacity .35s ease;}
   .modal-overlay.active{display:flex; opacity:1;}
   
   .modal-card{width:100%; max-width:420px; padding:32px 30px; text-align:center; transform:translateY(20px) scale(0.95); transition:all .4s cubic-bezier(0.34, 1.56, 0.64, 1);}
@@ -289,6 +311,23 @@
   .modal-stat span{font-size:11px; color:#a9c6ea; margin-top:4px;}
   .modal-actions{display:flex; gap:10px; margin-top:22px;}
   .modal-actions .btn{flex:1;}
+
+  /* Custom Cheat & Block UI */
+  #cheatModal .modal-card {
+    border-color: rgba(239, 98, 98, 0.4);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1), 0 0 40px rgba(239, 98, 98, 0.15);
+  }
+  
+  #blockScreen {
+    position: fixed; inset: 0; background: var(--navy-deep); z-index: 99999;
+    display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    padding: 30px;
+  }
+  #blockScreen.active { display: flex; }
+  .block-icon { font-size: 64px; margin-bottom: 20px; animation: pulseRing 2s infinite; }
+  .block-title { font-size: 28px; color: var(--danger); font-weight: 800; margin: 0 0 10px; }
+  .block-desc { font-size: 15px; color: #a9c6ea; max-width: 400px; line-height: 1.6; }
+  .block-timer { font-family: 'IBM Plex Mono', monospace; font-size: 48px; color: var(--gold-accent); font-weight: 800; margin: 30px 0; letter-spacing: 2px;}
 
   /* Beta Welcome Customizations */
   #betaModal .modal-card {
@@ -345,7 +384,6 @@
     user-select: none;
     white-space: nowrap;
   }
-
   .footer-liquid:hover {
     background: rgba(255, 255, 255, 0.14);
     border-color: rgba(92, 200, 247, 0.5);
@@ -355,7 +393,6 @@
       inset 0 1px 2px rgba(255, 255, 255, 0.5);
     transform: translateX(-50%) translateY(-3px) scale(1.02);
   }
-
   .footer-liquid .brand-highlight {
     color: var(--sky-accent);
     font-weight: 700;
@@ -363,29 +400,16 @@
     text-shadow: 0 0 10px rgba(92, 200, 247, 0.3);
     transition: text-shadow 0.35s ease;
   }
-
   .footer-liquid:hover .brand-highlight {
     text-shadow: 0 0 16px rgba(92, 200, 247, 0.8);
   }
 
   /* Print Styles */
   @media print {
-    body {
-      background: #ffffff !important;
-      color: #000000 !important;
-    }
-    .blob, .instr-actions, .review-list, .footer-liquid {
-      display: none !important;
-    }
-    .result-card {
-      box-shadow: none !important;
-      border: 1px solid #ccc !important;
-      color: #000 !important;
-      margin-top: 50px;
-    }
-    h2, p, b, span {
-      color: #000 !important;
-    }
+    body { background: #ffffff !important; color: #000000 !important; }
+    .blob, .instr-actions, .review-list, .footer-liquid { display: none !important; }
+    .result-card { box-shadow: none !important; border: 1px solid #ccc !important; color: #000 !important; margin-top: 50px; }
+    h2, p, b, span { color: #000 !important; }
   }
 
   @media (max-width:880px){
@@ -402,17 +426,10 @@
     .question-card{padding:24px 20px;}
     .nav-grid{grid-template-columns:repeat(6,1fr);}
     .topbar-right{flex-wrap: wrap;}
-    .footer-liquid {
-      bottom: 10px;
-      padding: 7px 18px;
-      font-size: 11px;
-    }
+    .footer-liquid { bottom: 10px; padding: 7px 18px; font-size: 11px; }
   }
-
   :focus-visible{outline:2px solid var(--sky-accent); outline-offset:2px;}
-  @media (prefers-reduced-motion:reduce){
-    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
-  }
+  @media (prefers-reduced-motion:reduce){ *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;} }
 </style>
 </head>
 <body>
@@ -428,7 +445,6 @@
     <div class="glass login-card" id="loginCard">
       <img class="emblem" src="logo-kemendikdasmen.png" alt="Logo Tut Wuri Handayani">
       
-      <!-- Label Beta diubah menyatu dengan judul agar elegan -->
       <h1 class="login-title">
         TKA SD 2026 
         <span class="beta-pill">BETA</span>
@@ -437,15 +453,15 @@
 
       <div class="field">
         <label for="inpNama">Nama Peserta</label>
-        <input type="text" id="inpNama" placeholder="Tulis nama lengkap kamu">
+        <input type="text" id="inpNama" placeholder="Tulis nama lengkap kamu" autocomplete="off">
       </div>
       <div class="field">
         <label for="inpSekolah">Asal Sekolah</label>
-        <input type="text" id="inpSekolah" placeholder="Contoh: SDN 1 Kediri">
+        <input type="text" id="inpSekolah" placeholder="Contoh: SDN 1 Kediri" autocomplete="off">
       </div>
       <div class="field">
         <label for="inpKelas">Kelas</label>
-        <input type="text" id="inpKelas" placeholder="Contoh: VI (Enam)">
+        <input type="text" id="inpKelas" placeholder="Contoh: VI (Enam)" autocomplete="off">
       </div>
       <div class="field">
         <label for="inpMapel">Mata Pelajaran</label>
@@ -455,7 +471,7 @@
           <option value="ipas">IPAS</option>
         </select>
       </div>
-      <div class="error-msg" id="loginError"></div>
+      <div class="error-msg" id="loginError">Mohon lengkapi data yang ditandai merah.</div>
       <button class="btn btn-primary" id="btnMasuk">Masuk Ruang Ujian &rarr;</button>
     </div>
   </section>
@@ -483,9 +499,9 @@
         <ol class="instr-list">
           <li><span class="instr-num">1</span><span class="instr-text">Waktu pengerjaan adalah <b id="ruleDurasi">15 Menit</b> dan akan berjalan otomatis.</span></li>
           <li><span class="instr-num">2</span><span class="instr-text">Setiap soal dilengkapi 4 pilihan jawaban. Cukup klik/tap pada opsi yang kamu anggap paling tepat.</span></li>
-          <li><span class="instr-num">3</span><span class="instr-text">Apabila ragu dengan jawaban yang dipilih, tandai soal tersebut dengan tombol <b>Ragu-ragu</b> di bagian bawah layar.</span></li>
-          <li><span class="instr-num">4</span><span class="instr-text">Jawabanmu tersimpan otomatis setiap kali berpindah soal.</span></li>
-          <li><span class="instr-num">5</span><span class="instr-text">Berpindah tab/jendela atau keluar dari mode layar penuh akan tercatat sebagai <b>pelanggaran</b>.</span></li>
+          <li><span class="instr-num">3</span><span class="instr-text">Apabila ragu, tandai soal tersebut dengan tombol <b>Ragu-ragu</b> di bagian bawah layar.</span></li>
+          <li><span class="instr-num">4</span><span class="instr-text">Sistem ini dilengkapi <b>Keamanan Ketat Anti-Kecurangan</b>.</span></li>
+          <li><span class="instr-num">5</span><span class="instr-text" style="color:var(--danger); font-weight:600;">Keluar dari layar penuh (Fullscreen), berpindah tab, atau membuka jendela lain akan memicu pemblokiran perangkat selama 20 menit pada pelanggaran kedua.</span></li>
         </ol>
         <label class="agree-box" id="agreeBox">
           <input type="checkbox" id="chkAgree">
@@ -511,7 +527,6 @@
           </div>
         </div>
         <div class="topbar-right">
-          <!-- Fitur Ukuran Huruf -->
           <div style="display:flex; gap:6px; margin-right:10px;">
             <button class="btn btn-ghost" id="btnFontDown" style="padding:6px 10px; font-size:12px;" title="Perkecil Huruf">A-</button>
             <button class="btn btn-ghost" id="btnFontUp" style="padding:6px 10px; font-size:12px;" title="Perbesar Huruf">A+</button>
@@ -581,7 +596,7 @@
       <div class="review-list" id="reviewList"></div>
       <div class="instr-actions">
         <button class="btn btn-ghost" id="btnCetak" style="flex:1;">Cetak Hasil (PDF)</button>
-        <button class="btn btn-primary" id="btnUlangi" style="flex:1;">Ulangi Simulasi</button>
+        <button class="btn btn-primary" id="btnUlangi" style="flex:1;">Kembali ke Beranda</button>
       </div>
     </div>
   </section>
@@ -598,20 +613,35 @@
 <!-- ===================== WELCOME BETA MODAL ===================== -->
 <div class="modal-overlay" id="betaModal">
   <div class="glass modal-card" style="position:relative; overflow:hidden;">
-    <!-- Dekorasi efek glowing khusus untuk beta modal -->
     <div style="position:absolute; top:-50px; left:-50px; width:150px; height:150px; background:var(--gold-accent); filter:blur(60px); opacity:0.25; pointer-events:none;"></div>
     <div style="position:absolute; bottom:-50px; right:-50px; width:150px; height:150px; background:var(--sky-accent); filter:blur(60px); opacity:0.2; pointer-events:none;"></div>
-    
     <div style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; background:rgba(240,180,41,0.15); border:1px solid rgba(240,180,41,0.4); color:var(--gold-accent); border-radius:99px; font-size:11.5px; font-weight:800; letter-spacing:1px; margin-bottom:20px;">
       <span style="width:6px; height:6px; border-radius:50%; background:var(--gold-accent); box-shadow:0 0 6px var(--gold-accent); animation: pulseRing 1s infinite;"></span>
       BETA TESTER
     </div>
-
     <h2>Selamat Datang, Pionir!</h2>
     <p style="font-size:13.5px; color:#a9c6ea; line-height:1.65; margin:0 0 28px;">Sistem Ujian CBT ini masih dalam tahap pengujian <b>(Beta)</b>. Terima kasih telah meluangkan waktu untuk menguji sistem kami. Masukanmu sangat berarti untuk penyempurnaan ke depan.</p>
-    
     <button class="btn btn-primary" id="btnTutupBeta" style="background:linear-gradient(135deg, var(--gold-accent), #ffd873); color:#3a2600; box-shadow:0 8px 24px rgba(240,180,41,0.3);">Mulai Eksplorasi &rarr;</button>
   </div>
+</div>
+
+<!-- ===================== CHEAT WARNING MODAL ===================== -->
+<div class="modal-overlay" id="cheatModal">
+  <div class="glass modal-card" style="position:relative; overflow:hidden;">
+    <div style="position:absolute; top:-50px; right:-50px; width:150px; height:150px; background:var(--danger); filter:blur(60px); opacity:0.25; pointer-events:none;"></div>
+    <h2 style="color:var(--danger); font-size:24px; margin:0 0 10px; font-weight:800;">Pelanggaran Terdeteksi!</h2>
+    <p style="font-size:13.5px; color:#e3ecf9; line-height:1.6; margin:0 0 8px;" id="cheatReason">Kamu terdeteksi keluar dari layar ujian.</p>
+    <p style="font-size:12.5px; color:#ffb3b3; font-weight:600; background:rgba(239,98,98,0.15); padding:10px; border-radius:10px; margin-bottom:24px;">Ini adalah <b id="cheatCountText">Peringatan ke-1</b>. Jika mencapai 2 pelanggaran, perangkatmu akan diblokir selama 20 Menit dan ujian dibatalkan.</p>
+    <button class="btn btn-danger" id="btnKembaliCheat" style="width:100%;">Saya Mengerti & Kembali Ujian</button>
+  </div>
+</div>
+
+<!-- ===================== DEVICE BLOCKED FULL SCREEN ===================== -->
+<div id="blockScreen">
+  <div class="block-icon">🔒</div>
+  <h2 class="block-title">PERANGKAT DIBLOKIR</h2>
+  <p class="block-desc">Sistem mengunci sementara perangkat ini karena terdeteksi melakukan pelanggaran ujian yang berulang (Bypass/Keluar Layar/Tab Baru). Silakan tunggu hingga waktu hitung mundur selesai.</p>
+  <div class="block-timer" id="blockCountdown">20:00</div>
 </div>
 
 <!-- ===================== CONFIRM EXAM MODAL ===================== -->
@@ -645,23 +675,62 @@ function shuffleArray(array) {
 }
 
 /* =========================================================================
-   INISIALISASI BETA MODAL (Session Storage agar tidak muncul terus)
+   SISTEM BLOKIR PERANGKAT (LOCAL STORAGE)
+   ========================================================================= */
+let blockInterval = null;
+function checkDeviceBlock() {
+  const blockUntil = localStorage.getItem("cbt_block_until");
+  if (blockUntil) {
+    const remaining = parseInt(blockUntil) - Date.now();
+    if (remaining > 0) {
+      document.querySelector(".app").style.display = "none"; // Hide main app
+      document.getElementById("blockScreen").classList.add("active");
+      
+      clearInterval(blockInterval);
+      blockInterval = setInterval(() => {
+        const tr = parseInt(blockUntil) - Date.now();
+        if (tr <= 0) {
+          clearInterval(blockInterval);
+          localStorage.removeItem("cbt_block_until");
+          localStorage.setItem("cbt_violations", "0"); // Reset
+          location.reload(); // Unblock and reload
+        } else {
+          const m = Math.floor(tr / 60000).toString().padStart(2, "0");
+          const s = Math.floor((tr % 60000) / 1000).toString().padStart(2, "0");
+          document.getElementById("blockCountdown").textContent = `${m}:${s}`;
+        }
+      }, 1000);
+      return true; // Is blocked
+    } else {
+      localStorage.removeItem("cbt_block_until");
+      localStorage.setItem("cbt_violations", "0");
+    }
+  }
+  return false; // Not blocked
+}
+
+// Cek blokir saat halaman baru dimuat
+if (checkDeviceBlock()) {
+  // Jika diblokir, hentikan inisialisasi yang lain
+  throw new Error("Device is blocked.");
+}
+
+/* =========================================================================
+   INISIALISASI BETA MODAL 
    ========================================================================= */
 window.addEventListener("DOMContentLoaded", () => {
-  if (!sessionStorage.getItem("betaWelcomed")) {
+  if (!sessionStorage.getItem("betaWelcomed") && !localStorage.getItem("cbt_block_until")) {
     const bm = el("betaModal");
     bm.style.display = "flex"; 
-    // Force browser reflow untuk memicu animasi transisi
     void bm.offsetWidth;
     bm.classList.add("active");
   }
 });
-
 el("btnTutupBeta").addEventListener("click", () => {
   const bm = el("betaModal");
   bm.classList.remove("active");
   sessionStorage.setItem("betaWelcomed", "true");
-  setTimeout(() => { bm.style.display = "none"; }, 400); // Sesuai durasi CSS transition
+  setTimeout(() => { bm.style.display = "none"; }, 400); 
 });
 
 /* =========================================================================
@@ -669,8 +738,7 @@ el("btnTutupBeta").addEventListener("click", () => {
    ========================================================================= */
 const SUBJECTS = {
   matematika: {
-    label: "Matematika",
-    duration: 15 * 60,
+    label: "Matematika", duration: 15 * 60,
     questions: [
       { text: "Hasil dari 3/4 + 1/8 adalah ...", options: ["5/8","7/8","1","4/12"], correct: 1, explanation: "3/4 disamakan menjadi 6/8, sehingga 6/8 + 1/8 = 7/8." },
       { text: "Keliling persegi panjang dengan panjang 12 cm dan lebar 7 cm adalah ...", options: ["19 cm","38 cm","42 cm","84 cm"], correct: 1, explanation: "Keliling = 2 x (p + l) = 2 x (12+7) = 38 cm." },
@@ -683,31 +751,13 @@ const SUBJECTS = {
     ]
   },
   bindo: {
-    label: "Bahasa Indonesia",
-    duration: 12 * 60,
+    label: "Bahasa Indonesia", duration: 12 * 60,
     questions: [
       { text: "Sinonim dari kata \"gembira\" adalah ...", options: ["sedih","senang","marah","takut"], correct: 1, explanation: "\"Gembira\" memiliki arti yang sama dengan \"senang\"." },
       { text: "Antonim dari kata \"rajin\" adalah ...", options: ["giat","tekun","malas","cekatan"], correct: 2, explanation: "Lawan kata dari \"rajin\" adalah \"malas\"." },
       { text: "Kalimat berikut yang menggunakan kata baku adalah ...", options: ["Saya akan mempraktekkan ilmu itu.","Saya akan mempraktikkan ilmu itu.","Saya akan mempraktek ilmu itu.","Saya akan praktekkan ilmu itu."], correct: 1, explanation: "Bentuk baku yang tepat adalah \"mempraktikkan\"." },
       { text: "Ide pokok sebuah paragraf biasanya terdapat pada ...", options: ["judul teks","kalimat utama","kalimat penutup","catatan kaki"], correct: 1, explanation: "Ide pokok terkandung dalam kalimat utama paragraf." },
-      { text: "Teks yang menjelaskan langkah-langkah membuat sesuatu disebut teks ...", options: ["deskripsi","narasi","prosedur","eksposisi"], correct: 2, explanation: "Teks prosedur berisi langkah-langkah melakukan atau membuat sesuatu." },
-      { text: "Kata \"mereka\" pada sebuah kalimat termasuk jenis kata ...", options: ["kata benda","kata ganti","kata sifat","kata keterangan"], correct: 1, explanation: "\"Mereka\" adalah kata ganti orang (pronomina)." },
-      { text: "Awalan me- pada kata \"menulis\" berfungsi membentuk kata ...", options: ["benda","kerja","sifat","bilangan"], correct: 1, explanation: "Awalan me- pada \"menulis\" membentuk kata kerja aktif." },
-      { text: "Peribahasa \"berat sama dipikul, ringan sama dijinjing\" bermakna ...", options: ["kerja keras sendirian","hidup hemat","kebersamaan dalam suka dan duka","selalu mengalah"], correct: 2, explanation: "Peribahasa ini menggambarkan sikap gotong royong dan kebersamaan." }
-    ]
-  },
-  ipas: {
-    label: "IPAS",
-    duration: 12 * 60,
-    questions: [
-      { text: "Proses tumbuhan membuat makanannya sendiri disebut ...", options: ["respirasi","fotosintesis","transpirasi","fermentasi"], correct: 1, explanation: "Fotosintesis adalah proses tumbuhan membuat makanan menggunakan cahaya matahari." },
-      { text: "Alat pernapasan utama pada manusia adalah ...", options: ["jantung","hati","paru-paru","ginjal"], correct: 2, explanation: "Paru-paru berfungsi sebagai organ utama pertukaran gas pada pernapasan manusia." },
-      { text: "Gaya yang menyebabkan benda selalu jatuh ke bawah disebut gaya ...", options: ["gesek","magnet","gravitasi","otot"], correct: 2, explanation: "Gaya gravitasi bumi menarik semua benda ke arah pusat bumi." },
-      { text: "Berikut ini contoh sumber energi yang dapat diperbarui adalah ...", options: ["batu bara","minyak bumi","cahaya matahari","gas alam"], correct: 2, explanation: "Energi matahari tergolong energi terbarukan karena tidak akan habis." },
-      { text: "Perubahan wujud dari cair menjadi gas disebut ...", options: ["mencair","membeku","menguap","mengembun"], correct: 2, explanation: "Perubahan wujud zat cair menjadi gas disebut menguap." },
-      { text: "Rantai makanan pada umumnya diawali oleh ...", options: ["produsen","konsumen I","konsumen II","pengurai"], correct: 0, explanation: "Produsen (tumbuhan) adalah penghasil makanan pertama dalam rantai makanan." },
-      { text: "Alat yang digunakan untuk mengukur suhu tubuh disebut ...", options: ["barometer","termometer","higrometer","amperemeter"], correct: 1, explanation: "Termometer digunakan untuk mengukur suhu suatu benda atau tubuh." },
-      { text: "Ibu kota negara baru Indonesia yang berada di Kalimantan Timur bernama ...", options: ["Nusantara","Balikpapan","Samarinda","Jakarta"], correct: 0, explanation: "Ibu kota negara baru yang dibangun di Kalimantan Timur bernama Nusantara (IKN)." }
+      { text: "Teks yang menjelaskan langkah-langkah membuat sesuatu disebut teks ...", options: ["deskripsi","narasi","prosedur","eksposisi"], correct: 2, explanation: "Teks prosedur berisi langkah-langkah melakukan atau membuat sesuatu." }
     ]
   }
 };
@@ -718,15 +768,9 @@ const SUBJECTS = {
 const state = {
   student: { nama: "", sekolah: "", kelas: "" },
   subjectKey: "matematika",
-  questions: [],
-  duration: 0,
-  timeLeft: 0,
-  timerInterval: null,
-  current: 0,
-  answers: {},
-  flagged: new Set(),
-  violations: 0,
-  examStartedAt: null
+  questions: [], duration: 0, timeLeft: 0, timerInterval: null,
+  current: 0, answers: {}, flagged: new Set(),
+  examStartedAt: null, isWarningActive: false
 };
 
 const el = (id) => document.getElementById(id);
@@ -736,33 +780,47 @@ function showScreen(id){
 }
 function showToast(msg){
   const t = el("toast");
-  t.textContent = msg;
-  t.classList.add("show");
+  t.textContent = msg; t.classList.add("show");
   clearTimeout(showToast._tm);
   showToast._tm = setTimeout(()=> t.classList.remove("show"), 3200);
 }
 
-/* ---------------- LOGIN ---------------- */
+/* ---------------- LOGIN & VALIDASI BUG FIX ---------------- */
 el("btnMasuk").addEventListener("click", () => {
-  const nama = el("inpNama").value.trim();
-  const sekolah = el("inpSekolah").value.trim();
-  const kelas = el("inpKelas").value.trim();
+  const inpNama = el("inpNama");
+  const inpSekolah = el("inpSekolah");
+  const inpKelas = el("inpKelas");
   const mapel = el("inpMapel").value;
-  if(!nama || !sekolah || !kelas){
-    el("loginError").textContent = "Mohon lengkapi semua data terlebih dahulu.";
+
+  // Hapus class error sebelumnya
+  [inpNama, inpSekolah, inpKelas].forEach(i => i.classList.remove("input-error"));
+
+  let hasError = false;
+  if (!inpNama.value.trim()) { inpNama.classList.add("input-error"); hasError = true; }
+  if (!inpSekolah.value.trim()) { inpSekolah.classList.add("input-error"); hasError = true; }
+  if (!inpKelas.value.trim()) { inpKelas.classList.add("input-error"); hasError = true; }
+
+  if(hasError){
+    el("loginError").classList.add("show");
+    // Hapus animasi shake agar bisa dimainkan lagi nanti jika error lagi
+    setTimeout(() => {
+      [inpNama, inpSekolah, inpKelas].forEach(i => i.classList.remove("input-error"));
+    }, 400);
     return;
   }
-  el("loginError").textContent = "";
-  state.student = { nama, sekolah, kelas };
+  
+  el("loginError").classList.remove("show");
+  
+  state.student = { nama: inpNama.value.trim(), sekolah: inpSekolah.value.trim(), kelas: inpKelas.value.trim() };
   state.subjectKey = mapel;
   const subj = SUBJECTS[mapel];
   state.questions = subj.questions;
   state.duration = subj.duration;
 
   const menitDurasi = Math.round(subj.duration/60) + " Menit";
-  el("dpNama").textContent = nama;
-  el("dpKelas").textContent = kelas;
-  el("dpSekolah").textContent = sekolah;
+  el("dpNama").textContent = state.student.nama;
+  el("dpKelas").textContent = state.student.kelas;
+  el("dpSekolah").textContent = state.student.sekolah;
   el("dpMapel").textContent = subj.label;
   el("dpJumlah").textContent = subj.questions.length + " Soal";
   el("dpDurasi").textContent = menitDurasi;
@@ -774,74 +832,43 @@ el("btnMasuk").addEventListener("click", () => {
   showScreen("screen-instr");
 });
 
-el("chkAgree").addEventListener("change", function(){
-  el("btnMulai").disabled = !this.checked;
-});
-
-const loginCard = el("loginCard");
-document.addEventListener("mousemove", (e) => {
-  if(!el("screen-login").classList.contains("active")) return;
-  const r = loginCard.getBoundingClientRect();
-  const cx = r.left + r.width/2, cy = r.top + r.height/2;
-  const dx = (e.clientX - cx)/r.width, dy = (e.clientY - cy)/r.height;
-  loginCard.style.transform = `rotateY(${dx*4}deg) rotateX(${-dy*4}deg)`;
-});
-document.addEventListener("mouseleave", () => { loginCard.style.transform = "none"; });
-
+el("chkAgree").addEventListener("change", function(){ el("btnMulai").disabled = !this.checked; });
 el("btnKembali").addEventListener("click", () => showScreen("screen-login"));
 
 /* ---------------- INSTRUCTIONS -> EXAM ---------------- */
 el("btnMulai").addEventListener("click", () => {
-  state.current = 0;
-  state.answers = {};
-  state.flagged = new Set();
-  state.violations = 0;
-  state.timeLeft = state.duration;
-  state.examStartedAt = Date.now();
+  state.current = 0; state.answers = {}; state.flagged = new Set();
+  state.timeLeft = state.duration; state.examStartedAt = Date.now();
+  state.isWarningActive = false;
+  localStorage.setItem("cbt_violations", "0"); // Reset cheat di awal ujian
 
   const rawQuestions = SUBJECTS[state.subjectKey].questions;
   state.questions = shuffleArray(rawQuestions).map(q => {
     const originalCorrectText = q.options[q.correct];
     const shuffledOptions = shuffleArray(q.options);
     const newCorrectIndex = shuffledOptions.indexOf(originalCorrectText);
-
-    return {
-      ...q,
-      options: shuffledOptions,
-      correct: newCorrectIndex
-    };
+    return { ...q, options: shuffledOptions, correct: newCorrectIndex };
   });
 
   el("chipNama").textContent = state.student.nama;
   el("chipSekolah").textContent = state.student.sekolah + " · " + state.student.kelas;
   el("examMapelLabel").textContent = SUBJECTS[state.subjectKey].label;
 
-  buildNavigator();
-  renderQuestion();
-  startTimer();
+  buildNavigator(); renderQuestion(); startTimer();
   showScreen("screen-exam");
 
+  // Masuk Mode Layar Penuh Wajib
   if(document.documentElement.requestFullscreen){
-    document.documentElement.requestFullscreen().catch(()=>{});
+    document.documentElement.requestFullscreen().catch((err)=>{
+      console.warn("Fullscreen API gagal dimuat: ", err);
+    });
   }
 });
 
 /* ---------------- FITUR UKURAN HURUF ---------------- */
 let currentFontSize = 17;
-
-el("btnFontUp").addEventListener("click", () => {
-  if (currentFontSize < 24) {
-    currentFontSize += 2;
-    el("qText").style.fontSize = currentFontSize + "px";
-  }
-});
-
-el("btnFontDown").addEventListener("click", () => {
-  if (currentFontSize > 13) {
-    currentFontSize -= 2;
-    el("qText").style.fontSize = currentFontSize + "px";
-  }
-});
+el("btnFontUp").addEventListener("click", () => { if (currentFontSize < 24) { currentFontSize += 2; el("qText").style.fontSize = currentFontSize + "px"; }});
+el("btnFontDown").addEventListener("click", () => { if (currentFontSize > 13) { currentFontSize -= 2; el("qText").style.fontSize = currentFontSize + "px"; }});
 
 /* ---------------- TIMER ---------------- */
 const FULL_DASH = 169.6;
@@ -851,11 +878,7 @@ function startTimer(){
   state.timerInterval = setInterval(() => {
     state.timeLeft--;
     if(state.timeLeft <= 0){
-      state.timeLeft = 0;
-      updateTimerDisplay();
-      clearInterval(state.timerInterval);
-      finishExam(true);
-      return;
+      state.timeLeft = 0; updateTimerDisplay(); clearInterval(state.timerInterval); finishExam(true); return;
     }
     updateTimerDisplay();
   }, 1000);
@@ -868,19 +891,15 @@ function updateTimerDisplay(){
   el("timerRingFg").setAttribute("stroke-dashoffset", (FULL_DASH * (1-ratio)).toFixed(1));
   const wrap = el("timerRingWrap");
   wrap.classList.remove("warn","danger");
-  if(ratio <= 0.15) wrap.classList.add("danger");
-  else if(ratio <= 0.35) wrap.classList.add("warn");
+  if(ratio <= 0.15) wrap.classList.add("danger"); else if(ratio <= 0.35) wrap.classList.add("warn");
 }
 
-/* ---------------- NAVIGATOR ---------------- */
+/* ---------------- NAVIGATOR & RENDER ---------------- */
 function buildNavigator(){
-  const grid = el("navGrid");
-  grid.innerHTML = "";
+  const grid = el("navGrid"); grid.innerHTML = "";
   state.questions.forEach((q, i) => {
     const dot = document.createElement("div");
-    dot.className = "nav-dot";
-    dot.textContent = i+1;
-    dot.dataset.idx = i;
+    dot.className = "nav-dot"; dot.textContent = i+1; dot.dataset.idx = i;
     dot.addEventListener("click", () => { state.current = i; renderQuestion(); });
     grid.appendChild(dot);
   });
@@ -894,122 +913,139 @@ function refreshNavigator(){
     dot.classList.toggle("flagged", state.flagged.has(i));
   });
 }
-
-/* ---------------- QUESTION RENDER ---------------- */
 function renderQuestion(){
-  const i = state.current;
-  const q = state.questions[i];
-  const total = state.questions.length;
+  const i = state.current; const q = state.questions[i]; const total = state.questions.length;
   el("qProgress").textContent = `SOAL ${i+1} DARI ${total}`;
   el("examProgressLabel").textContent = `Soal ${i+1} dari ${total}`;
   el("qText").textContent = q.text;
 
-  const opts = el("qOptions");
-  opts.innerHTML = "";
+  const opts = el("qOptions"); opts.innerHTML = "";
   const letters = ["A","B","C","D"];
   q.options.forEach((optText, oi) => {
     const div = document.createElement("div");
     div.className = "option" + (state.answers[i] === oi ? " selected" : "");
     div.innerHTML = `<span class="opt-letter">${letters[oi]}</span><span class="opt-text">${optText}</span>`;
-    div.addEventListener("click", () => {
-      state.answers[i] = oi;
-      renderQuestion();
-      refreshNavigator();
-    });
+    div.addEventListener("click", () => { state.answers[i] = oi; renderQuestion(); refreshNavigator(); });
     opts.appendChild(div);
   });
-
   el("btnFlag").classList.toggle("active", state.flagged.has(i));
-  el("btnPrev").disabled = i === 0;
-  el("btnPrev").style.opacity = i === 0 ? 0.4 : 1;
+  el("btnPrev").disabled = i === 0; el("btnPrev").style.opacity = i === 0 ? 0.4 : 1;
   const isLast = i === total - 1;
   el("btnNext").style.display = isLast ? "none" : "inline-block";
   el("btnSelesai").style.display = isLast ? "inline-block" : "none";
   refreshNavigator();
 }
-
 el("btnPrev").addEventListener("click", () => { if(state.current>0){ state.current--; renderQuestion(); } });
 el("btnNext").addEventListener("click", () => { if(state.current < state.questions.length-1){ state.current++; renderQuestion(); } });
 el("btnFlag").addEventListener("click", () => {
-  const i = state.current;
-  if(state.flagged.has(i)) state.flagged.delete(i); else state.flagged.add(i);
+  if(state.flagged.has(state.current)) state.flagged.delete(state.current); else state.flagged.add(state.current);
   renderQuestion();
 });
 
-document.addEventListener("keydown", (e) => {
-  if(!el("screen-exam").classList.contains("active")) return;
-  if(e.key === "ArrowRight") el("btnNext").click();
-  if(e.key === "ArrowLeft") el("btnPrev").click();
-  if(["1","2","3","4"].includes(e.key)){
-    const oi = parseInt(e.key)-1;
-    if(state.questions[state.current].options[oi] !== undefined){
-      state.answers[state.current] = oi;
-      renderQuestion();
-    }
+/* ---------------- SISTEM KEAMANAN (ANTI-CHEAT DETECTOR) ---------------- */
+function triggerCheat(reason) {
+  // Cegah trigger ganda akibat event berdekatan (blur + fullscreenchange)
+  if (state.isWarningActive || !el("screen-exam").classList.contains("active")) return;
+  state.isWarningActive = true;
+
+  let violations = parseInt(localStorage.getItem("cbt_violations") || "0");
+  violations++;
+  localStorage.setItem("cbt_violations", violations);
+
+  if (violations >= 2) {
+    // PELANGGARAN KE-2 -> BLOKIR 20 MENIT
+    el("cheatModal").classList.remove("active");
+    const blockUntil = Date.now() + (20 * 60 * 1000); 
+    localStorage.setItem("cbt_block_until", blockUntil);
+    checkDeviceBlock(); 
+    finishExam(true); // Kirim jawaban otomatis di belakang layar
+  } else {
+    // PELANGGARAN KE-1 -> MUNCULKAN PERINGATAN MODAL TENGAN
+    el("cheatReason").textContent = reason;
+    el("cheatCountText").textContent = "Peringatan Pertama";
+    const cm = el("cheatModal");
+    cm.style.display = "flex"; void cm.offsetWidth; cm.classList.add("active");
+  }
+}
+
+// Tutup Peringatan Cheat dan paksa kembali ke Fullscreen
+el("btnKembaliCheat").addEventListener("click", () => {
+  const cm = el("cheatModal");
+  cm.classList.remove("active");
+  setTimeout(() => { 
+    cm.style.display = "none"; 
+    state.isWarningActive = false; // Buka kuncian peringatan
+  }, 400);
+
+  if(document.documentElement.requestFullscreen){
+    document.documentElement.requestFullscreen().catch(()=>{});
   }
 });
 
-/* ---------------- CONFIRM MODAL ---------------- */
+// Deteksi Keluar Fullscreen
+document.addEventListener("fullscreenchange", () => {
+  if (!document.fullscreenElement && el("screen-exam").classList.contains("active")) {
+    triggerCheat("Sistem mendeteksi kamu keluar dari mode Layar Penuh (Fullscreen).");
+  }
+});
+
+// Deteksi Ganti Tab / Minimize
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden && el("screen-exam").classList.contains("active")) {
+    triggerCheat("Kamu meninggalkan jendela browser (Buka tab/aplikasi lain).");
+  }
+});
+
+/* ---------------- CONFIRM & FINISH EXAM ---------------- */
 function openConfirm(){
   const total = state.questions.length;
   const answered = Object.keys(state.answers).length;
   el("mAnswered").textContent = answered;
   el("mFlagged").textContent = state.flagged.size;
   el("mEmpty").textContent = total - answered;
+  el("confirmModal").style.display = "flex"; void el("confirmModal").offsetWidth;
   el("confirmModal").classList.add("active");
 }
 el("btnSelesai").addEventListener("click", openConfirm);
 el("btnSelesaiSide").addEventListener("click", openConfirm);
-el("btnBatalSelesai").addEventListener("click", () => el("confirmModal").classList.remove("active"));
+el("btnBatalSelesai").addEventListener("click", () => { 
+  el("confirmModal").classList.remove("active"); 
+  setTimeout(() => el("confirmModal").style.display = "none", 400);
+});
 el("btnKonfirmasiSelesai").addEventListener("click", () => {
   el("confirmModal").classList.remove("active");
+  setTimeout(() => el("confirmModal").style.display = "none", 400);
   finishExam(false);
 });
 
-/* ---------------- ANTI-CHEAT (KEAMANAN) ---------------- */
-document.addEventListener("visibilitychange", () => {
-  if(document.hidden && el("screen-exam").classList.contains("active")){
-    state.violations++;
-    showToast(`Kamu meninggalkan jendela ujian! Pelanggaran tercatat: ${state.violations}/3`);
-    if(state.violations >= 3){
-      finishExam(true);
-    }
-  }
-});
-
-/* ---------------- FINISH & SCORING ---------------- */
 function finishExam(auto){
   clearInterval(state.timerInterval);
-  const total = state.questions.length;
-  let benar = 0, salah = 0, kosong = 0;
-  const reviewHtml = [];
+  const total = state.questions.length; let benar = 0, salah = 0, kosong = 0; const reviewHtml = [];
   state.questions.forEach((q, i) => {
     const ans = state.answers[i];
     if(ans === undefined){
-      kosong++;
-      reviewItem(reviewHtml, i, q, ans, false, true);
+      kosong++; reviewItem(reviewHtml, i, q, ans, false, true);
     } else if(ans === q.correct){
-      benar++;
-      reviewItem(reviewHtml, i, q, ans, true, false);
+      benar++; reviewItem(reviewHtml, i, q, ans, true, false);
     } else {
-      salah++;
-      reviewItem(reviewHtml, i, q, ans, false, false);
+      salah++; reviewItem(reviewHtml, i, q, ans, false, false);
     }
   });
   const score = Math.round((benar/total)*100);
   const elapsed = state.duration - state.timeLeft;
 
-  el("resultMapel").textContent = SUBJECTS[state.subjectKey].label + (auto ? " · Diselesaikan otomatis" : "");
+  // Render text hasil
+  el("resultMapel").textContent = SUBJECTS[state.subjectKey].label + (auto ? " (Diselesaikan Sistem)" : "");
   el("scoreNum").textContent = score;
-  el("rbBenar").textContent = benar;
-  el("rbSalah").textContent = salah;
-  el("rbKosong").textContent = kosong;
+  el("rbBenar").textContent = benar; el("rbSalah").textContent = salah; el("rbKosong").textContent = kosong;
   el("rbWaktu").textContent = `${Math.floor(elapsed/60)}:${(elapsed%60).toString().padStart(2,"0")}`;
   el("reviewList").innerHTML = reviewHtml.join("");
 
+  // Bersihkan token agar bisa mulai ujian lagi (kecuali kalau diblokir)
+  localStorage.setItem("cbt_violations", "0");
+
   showScreen("screen-result");
   animateScoreRing(score);
-
   if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
 }
 function reviewItem(arr, i, q, ans, isCorrect, isEmpty){
@@ -1021,18 +1057,12 @@ function reviewItem(arr, i, q, ans, isCorrect, isEmpty){
   </div>`);
 }
 function animateScoreRing(score){
-  const circumference = 465;
-  const offset = circumference - (circumference * score/100);
-  const ring = el("scoreRingFg");
-  ring.style.transition = "stroke-dashoffset 1.1s cubic-bezier(.4,0,.2,1)";
+  const circumference = 465; const offset = circumference - (circumference * score/100);
+  const ring = el("scoreRingFg"); ring.style.transition = "stroke-dashoffset 1.1s cubic-bezier(.4,0,.2,1)";
   requestAnimationFrame(() => { ring.setAttribute("stroke-dashoffset", offset); });
 }
 
-/* ---------------- TOMBOL CETAK & ULANGI ---------------- */
-el("btnCetak").addEventListener("click", () => {
-  window.print();
-});
-
+el("btnCetak").addEventListener("click", () => window.print());
 el("btnUlangi").addEventListener("click", () => {
   el("inpNama").value = ""; el("inpSekolah").value=""; el("inpKelas").value="";
   showScreen("screen-login");
