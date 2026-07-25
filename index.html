@@ -55,7 +55,7 @@
   @keyframes drift2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-70px,-40px) scale(1.1);}}
   @keyframes drift3{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-40px,60px) scale(0.9);}}
 
-  .app{position:relative; z-index:1; min-height:100vh;}
+  .app{position:relative; z-index:1; min-height:100vh; padding-bottom: 70px;}
   .screen{display:none; min-height:100vh; align-items:center; justify-content:center; padding:32px; animation:fadeIn .55s ease;}
   .screen.active{display:flex;}
   @keyframes fadeIn{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);}}
@@ -73,7 +73,7 @@
   .mono{font-family:'IBM Plex Mono',monospace;}
 
   /* ---------- Emblem (Logos) ---------- */
-  .emblem{width:86px; height:86px; margin:0 auto 16px; object-fit:contain; display:block; drop-shadow: 0 4px 12px rgba(0,0,0,0.15);}
+  .emblem{width:86px; height:86px; margin:0 auto 16px; object-fit:contain; display:block;}
   .emblem-sm{width:42px; height:42px; flex:none; object-fit:contain;}
 
   /* ---------- Login screen ---------- */
@@ -217,7 +217,7 @@
   .exam-body{display:flex; gap:16px; align-items:flex-start;}
   .question-card{flex:1; padding:34px 38px; min-height:400px; display:flex; flex-direction:column;}
   .q-progress{font-size:12px; font-weight:700; letter-spacing:0.4px; color:var(--sky-accent); text-transform:uppercase; margin-bottom:6px;}
-  .q-text{font-size:17px; line-height:1.65; font-weight:500; color:#f2f7fd; margin-bottom:26px; transition: font-size 0.2s ease;}
+  .q-text{font-size:17px; line-height:1.65; font-weight:500; color:#f2f7fd; margin-bottom:26px; transition: font-size 0.25s ease;}
   .options{display:flex; flex-direction:column; gap:12px; flex:1;}
   .option{
     display:flex; align-items:center; gap:14px; padding:15px 18px; border-radius:16px;
@@ -298,13 +298,61 @@
   .review-list::-webkit-scrollbar{width:6px;}
   .review-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2); border-radius:3px;}
 
+  /* ---------- Liquid Glass Floating Footer ---------- */
+  .footer-liquid {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 800;
+    padding: 9px 24px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.3),
+      inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(231, 241, 251, 0.82);
+    letter-spacing: 0.4px;
+    transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    pointer-events: auto;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .footer-liquid:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(92, 200, 247, 0.5);
+    color: #ffffff;
+    box-shadow: 
+      0 12px 35px rgba(92, 200, 247, 0.25),
+      inset 0 1px 2px rgba(255, 255, 255, 0.5);
+    transform: translateX(-50%) translateY(-3px) scale(1.02);
+  }
+
+  .footer-liquid .brand-highlight {
+    color: var(--sky-accent);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 10px rgba(92, 200, 247, 0.3);
+    transition: text-shadow 0.35s ease;
+  }
+
+  .footer-liquid:hover .brand-highlight {
+    text-shadow: 0 0 16px rgba(92, 200, 247, 0.8);
+  }
+
   /* Print Styles */
   @media print {
     body {
       background: #ffffff !important;
       color: #000000 !important;
     }
-    .blob, .instr-actions, .review-list {
+    .blob, .instr-actions, .review-list, .footer-liquid {
       display: none !important;
     }
     .result-card {
@@ -332,6 +380,11 @@
     .question-card{padding:24px 20px;}
     .nav-grid{grid-template-columns:repeat(6,1fr);}
     .topbar-right{flex-wrap: wrap;}
+    .footer-liquid {
+      bottom: 10px;
+      padding: 7px 18px;
+      font-size: 11px;
+    }
   }
 
   :focus-visible{outline:2px solid var(--sky-accent); outline-offset:2px;}
@@ -351,10 +404,9 @@
   <!-- ===================== LOGIN SCREEN ===================== -->
   <section class="screen active" id="screen-login">
     <div class="glass login-card" id="loginCard">
-      <!-- LOGO BARU -->
       <img class="emblem" src="logo-kemendikdasmen.png" alt="Logo Tut Wuri Handayani">
       
-      <h1 class="login-title">TKA SD 2027</h1>
+      <h1 class="login-title">TKA SD 2026</h1>
       <p class="login-sub">TES KEMAMPUAN AKADEMIK &middot; SIMULASI CBT</p>
 
       <div class="field">
@@ -429,7 +481,6 @@
     <div class="exam-wrap">
       <div class="glass topbar">
         <div class="topbar-left">
-          <!-- LOGO BARU (KECIL) -->
           <img class="emblem-sm" src="logo-kemendikdasmen.png" alt="Logo Tut Wuri Handayani">
           
           <div>
@@ -438,7 +489,7 @@
           </div>
         </div>
         <div class="topbar-right">
-          <!-- Fitur Ukuran Huruf (Font Resizer) -->
+          <!-- Fitur Ukuran Huruf -->
           <div style="display:flex; gap:6px; margin-right:10px;">
             <button class="btn btn-ghost" id="btnFontDown" style="padding:6px 10px; font-size:12px;" title="Perkecil Huruf">A-</button>
             <button class="btn btn-ghost" id="btnFontUp" style="padding:6px 10px; font-size:12px;" title="Perbesar Huruf">A+</button>
@@ -510,7 +561,6 @@
       </div>
       <div class="review-list" id="reviewList"></div>
       
-      <!-- Tombol Cetak dan Ulangi -->
       <div class="instr-actions">
         <button class="btn btn-ghost" id="btnCetak" style="flex:1;">Cetak Hasil (PDF)</button>
         <button class="btn btn-primary" id="btnUlangi" style="flex:1;">Ulangi Simulasi</button>
@@ -519,6 +569,11 @@
   </section>
 
 </div>
+
+<!-- Liquid Glass Floating Footer -->
+<footer class="footer-liquid">
+  <span>&copy; 2026 <span class="brand-highlight">AzkaTeam</span>. All rights reserved.</span>
+</footer>
 
 <div class="toast" id="toast"></div>
 
@@ -542,7 +597,6 @@
 /* =========================================================================
    FUNGSI BANTUAN (UTILITIES)
    ========================================================================= */
-// Fungsi utilitas untuk mengacak array (Soal dan Pilihan Jawaban)
 function shuffleArray(array) {
   const arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -553,7 +607,7 @@ function shuffleArray(array) {
 }
 
 /* =========================================================================
-   DATA SOAL — ganti / tambah isi array ini dengan soal asli untuk produksi.
+   DATA SOAL
    ========================================================================= */
 const SUBJECTS = {
   matematika: {
@@ -611,7 +665,7 @@ const state = {
   timeLeft: 0,
   timerInterval: null,
   current: 0,
-  answers: {},      // index -> selected option index
+  answers: {},
   flagged: new Set(),
   violations: 0,
   examStartedAt: null
@@ -666,7 +720,6 @@ el("chkAgree").addEventListener("change", function(){
   el("btnMulai").disabled = !this.checked;
 });
 
-// subtle tilt effect on login card
 const loginCard = el("loginCard");
 document.addEventListener("mousemove", (e) => {
   if(!el("screen-login").classList.contains("active")) return;
@@ -688,14 +741,10 @@ el("btnMulai").addEventListener("click", () => {
   state.timeLeft = state.duration;
   state.examStartedAt = Date.now();
 
-  // FITUR ACAK SOAL DAN OPSI
   const rawQuestions = SUBJECTS[state.subjectKey].questions;
   state.questions = shuffleArray(rawQuestions).map(q => {
-    // Simpan indeks kunci jawaban asli
     const originalCorrectText = q.options[q.correct];
-    // Acak opsi jawaban
     const shuffledOptions = shuffleArray(q.options);
-    // Cari posisi baru kunci jawaban setelah diacak
     const newCorrectIndex = shuffledOptions.indexOf(originalCorrectText);
 
     return {
@@ -720,7 +769,7 @@ el("btnMulai").addEventListener("click", () => {
 });
 
 /* ---------------- FITUR UKURAN HURUF ---------------- */
-let currentFontSize = 17; // Ukuran bawaan .q-text
+let currentFontSize = 17;
 
 el("btnFontUp").addEventListener("click", () => {
   if (currentFontSize < 24) {
@@ -737,7 +786,7 @@ el("btnFontDown").addEventListener("click", () => {
 });
 
 /* ---------------- TIMER ---------------- */
-const FULL_DASH = 169.6; // 2*pi*27
+const FULL_DASH = 169.6;
 function startTimer(){
   clearInterval(state.timerInterval);
   updateTimerDisplay();
