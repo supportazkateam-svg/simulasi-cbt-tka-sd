@@ -38,6 +38,11 @@
     min-height:100vh;
     overflow-x:hidden;
     position:relative;
+    /* Mencegah seleksi teks secara global pada mode ujian */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
   }
   /* Aurora blobs */
   .blob{
@@ -71,6 +76,12 @@
 
   h1,h2,h3,.display{font-family:'Plus Jakarta Sans',sans-serif;}
   .mono{font-family:'IBM Plex Mono',monospace;}
+
+  /* Biarkan input teks tetap bisa diketik/di-select */
+  input, select {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+  }
 
   /* ---------- Emblem (Logos) ---------- */
   .emblem{width:86px; height:86px; margin:0 auto 16px; object-fit:contain; display:block;}
@@ -107,15 +118,12 @@
     box-shadow:0 0 0 3px rgba(92,200,247,0.22);
   }
   
-  /* Animasi Error Validasi Input (Zero Bug) */
   .input-error {
     border-color: var(--danger) !important;
     background: rgba(239, 98, 98, 0.1) !important;
     box-shadow: 0 0 0 3px rgba(239, 98, 98, 0.2) !important;
   }
-  .shake {
-    animation: shake 0.4s ease-in-out;
-  }
+  .shake { animation: shake 0.4s ease-in-out; }
   @keyframes shake {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-4px); }
@@ -406,7 +414,7 @@
     text-shadow: 0 0 16px rgba(92, 200, 247, 0.8);
   }
 
-  /* Print Styles - Disesuaikan agar semua kunci jawaban ikut ter-print */
+  /* Print Styles */
   @media print {
     body { background: #ffffff !important; color: #000000 !important; }
     .blob, .instr-actions, .footer-liquid { display: none !important; }
@@ -455,7 +463,6 @@
       </h1>
       <p class="login-sub">TES KEMAMPUAN AKADEMIK &middot; SIMULASI CBT</p>
 
-      <!-- Menggunakan tag form agar mendukung submit via Enter -->
       <form id="loginForm">
         <div class="field">
           <label for="inpNama">Nama Peserta</label>
@@ -470,7 +477,7 @@
           <input type="text" id="inpKelas" placeholder="Contoh: VI (Enam)" autocomplete="off">
         </div>
         <div class="field">
-          <label for="inpMapel">Mata Pelajaran</label>
+          <label for="inpMapel">Mata Pelajaran Wajib</label>
           <select id="inpMapel">
             <option value="matematika">Matematika</option>
             <option value="bindo">Bahasa Indonesia</option>
@@ -507,8 +514,8 @@
           <li><span class="instr-num">1</span><span class="instr-text">Waktu pengerjaan adalah <b id="ruleDurasi">15 Menit</b> dan akan berjalan otomatis.</span></li>
           <li><span class="instr-num">2</span><span class="instr-text">Setiap soal dilengkapi 4 pilihan jawaban. Cukup klik/tap pada opsi yang kamu anggap paling tepat.</span></li>
           <li><span class="instr-num">3</span><span class="instr-text">Apabila ragu, tandai soal tersebut dengan tombol <b>Ragu-ragu</b> di bagian bawah layar.</span></li>
-          <li><span class="instr-num">4</span><span class="instr-text">Sistem ini dilengkapi <b>Keamanan Ketat Anti-Kecurangan</b>.</span></li>
-          <li><span class="instr-num">5</span><span class="instr-text" style="color:var(--danger); font-weight:600;">Keluar dari layar penuh (Fullscreen), berpindah tab, atau membuka jendela lain akan memicu pemblokiran perangkat selama 20 menit pada pelanggaran kedua.</span></li>
+          <li><span class="instr-num">4</span><span class="instr-text">Fitur <b>Copy-Paste</b> dan klik kanan dikunci selama ujian berlangsung.</span></li>
+          <li><span class="instr-num">5</span><span class="instr-text" style="color:var(--danger); font-weight:600;">Keluar dari layar penuh (Fullscreen) atau berpindah tab akan memicu pemblokiran perangkat selama 20 menit pada pelanggaran kedua.</span></li>
         </ol>
         <label class="agree-box" id="agreeBox">
           <input type="checkbox" id="chkAgree">
@@ -670,7 +677,7 @@
 
 <script>
 /* =========================================================================
-   UTILITIES & INIT (BUGFIXED: Variabel el dipindah ke paling atas)
+   UTILITIES & INIT 
    ========================================================================= */
 const el = (id) => document.getElementById(id);
 
@@ -719,7 +726,7 @@ function checkDeviceBlock() {
 }
 
 if (checkDeviceBlock()) {
-  throw new Error("Sistem: Device is blocked. Menghentikan inisialisasi.");
+  throw new Error("Sistem: Device is blocked.");
 }
 
 /* =========================================================================
@@ -789,18 +796,17 @@ function showToast(msg){
   showToast._tm = setTimeout(()=> t.classList.remove("show"), 3200);
 }
 
-/* ---------------- LOGIN & VALIDASI (BUGFIXED) ---------------- */
+/* ---------------- LOGIN & VALIDASI ---------------- */
 el("loginForm").addEventListener("submit", (e) => {
-  e.preventDefault(); // Mencegah reload halaman
+  e.preventDefault();
   
   const inpNama = el("inpNama");
   const inpSekolah = el("inpSekolah");
   const inpKelas = el("inpKelas");
   const mapel = el("inpMapel").value;
 
-  // Bersihkan class validasi sebelumnya
   [inpNama, inpSekolah, inpKelas].forEach(i => i.classList.remove("input-error", "shake"));
-  void inpNama.offsetWidth; // Force browser reflow untuk restart animasi
+  void inpNama.offsetWidth;
 
   let hasError = false;
   if (!inpNama.value.trim()) { inpNama.classList.add("input-error", "shake"); hasError = true; }
@@ -809,7 +815,6 @@ el("loginForm").addEventListener("submit", (e) => {
 
   if(hasError){
     el("loginError").classList.add("show");
-    // Hapus efek shake setelah 0.4s, tapi JANGAN hapus efek input-error (merah)
     setTimeout(() => {
       [inpNama, inpSekolah, inpKelas].forEach(i => i.classList.remove("shake"));
     }, 400);
@@ -874,7 +879,6 @@ el("btnMulai").addEventListener("click", () => {
   buildNavigator(); renderQuestion(); startTimer();
   showScreen("screen-exam");
 
-  // Masuk Mode Layar Penuh Wajib
   if(document.documentElement.requestFullscreen){
     document.documentElement.requestFullscreen().catch(()=>{});
   }
@@ -970,6 +974,39 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+/* ---------------- PENGAMAN TAMBAHAN: BLOKIR COPY-PASTE & KLIK KANAN ---------------- */
+document.addEventListener("copy", (e) => {
+  if (el("screen-exam").classList.contains("active")) {
+    e.preventDefault();
+    showToast("Peringatan: Menyalin teks soal tidak diizinkan!");
+  }
+});
+
+document.addEventListener("cut", (e) => {
+  if (el("screen-exam").classList.contains("active")) {
+    e.preventDefault();
+  }
+});
+
+document.addEventListener("contextmenu", (e) => {
+  if (el("screen-exam").classList.contains("active")) {
+    e.preventDefault();
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (el("screen-exam").classList.contains("active")) {
+    // Blokir pintasan Ctrl+C, Ctrl+X, Ctrl+A, Ctrl+U, F12 (Inspeksi Elemen)
+    if (
+      (e.ctrlKey && (e.key === 'c' || e.key === 'x' || e.key === 'a' || e.key === 'u')) ||
+      e.key === 'F12'
+    ) {
+      e.preventDefault();
+      showToast("Aksi ini dikunci demi keamanan ujian!");
+    }
+  }
+});
+
 /* ---------------- SISTEM KEAMANAN (ANTI-CHEAT DETECTOR) ---------------- */
 function triggerCheat(reason) {
   if (state.isWarningActive || !el("screen-exam").classList.contains("active")) return;
@@ -1018,7 +1055,7 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
-/* ---------------- CONFIRM & FINISH EXAM (BUGFIXED MODAL TRANSISI) ---------------- */
+/* ---------------- CONFIRM & FINISH EXAM ---------------- */
 function openConfirm(){
   const total = state.questions.length;
   const answered = Object.keys(state.answers).length;
@@ -1028,7 +1065,7 @@ function openConfirm(){
   
   const cm = el("confirmModal");
   cm.style.display = "flex"; 
-  void cm.offsetWidth; // Force Reflow
+  void cm.offsetWidth; 
   cm.classList.add("active");
 }
 
