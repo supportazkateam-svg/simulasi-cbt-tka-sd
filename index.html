@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CBT TKA SD 2026</title>
+<title>CBT TKA SD 2026 - Beta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -83,7 +83,15 @@
     text-align:center;
     transition:transform .15s ease;
   }
-  .login-title{font-size:24px; font-weight:800; letter-spacing:0.3px; margin:0 0 2px;}
+  .login-title{display:flex; align-items:center; justify-content:center; gap:10px; font-size:24px; font-weight:800; letter-spacing:0.3px; margin:0 0 2px;}
+  .beta-pill{
+    font-size:10px; font-family:'IBM Plex Mono',monospace; font-weight:700;
+    background:rgba(240,180,41,0.15); border:1px solid rgba(240,180,41,0.5);
+    color:var(--gold-accent); padding:4px 8px; border-radius:8px;
+    letter-spacing:1px; transform:translateY(-1px);
+    box-shadow: 0 0 10px rgba(240,180,41,0.2);
+  }
+  
   .login-sub{font-size:13px; color:#bcd3f0; margin:0 0 28px; font-weight:500; letter-spacing:0.4px;}
   .field{text-align:left; margin-bottom:16px;}
   .field label{display:block; font-size:12px; font-weight:600; color:#a9c6ea; margin-bottom:6px; letter-spacing:0.3px;}
@@ -267,10 +275,13 @@
   }
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
 
-  /* modal */
-  .modal-overlay{position:fixed; inset:0; background:rgba(5,12,28,0.55); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; z-index:900; animation:fadeIn .3s ease;}
-  .modal-overlay.active{display:flex;}
-  .modal-card{width:100%; max-width:420px; padding:32px 30px; text-align:center;}
+  /* modal overlays */
+  .modal-overlay{position:fixed; inset:0; background:rgba(5,12,28,0.65); backdrop-filter:blur(8px); display:none; align-items:center; justify-content:center; z-index:900; opacity:0; transition:opacity .35s ease;}
+  .modal-overlay.active{display:flex; opacity:1;}
+  
+  .modal-card{width:100%; max-width:420px; padding:32px 30px; text-align:center; transform:translateY(20px) scale(0.95); transition:all .4s cubic-bezier(0.34, 1.56, 0.64, 1);}
+  .modal-overlay.active .modal-card{transform:translateY(0) scale(1);}
+
   .modal-card h3{margin:0 0 10px; font-size:19px;}
   .modal-stats{display:flex; justify-content:center; gap:20px; margin:20px 0 8px;}
   .modal-stat{display:flex; flex-direction:column; align-items:center;}
@@ -278,6 +289,17 @@
   .modal-stat span{font-size:11px; color:#a9c6ea; margin-top:4px;}
   .modal-actions{display:flex; gap:10px; margin-top:22px;}
   .modal-actions .btn{flex:1;}
+
+  /* Beta Welcome Customizations */
+  #betaModal .modal-card {
+    border-color: rgba(240, 180, 41, 0.35);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2), 0 0 30px rgba(240,180,41,0.1);
+  }
+  #betaModal h2 {
+    font-size: 24px; margin: 0 0 12px; font-weight: 800;
+    background: linear-gradient(135deg, #ffffff, #bcd3f0);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
 
   /* result screen */
   .result-card{width:100%; max-width:640px; padding:44px 42px; text-align:center;}
@@ -406,7 +428,11 @@
     <div class="glass login-card" id="loginCard">
       <img class="emblem" src="logo-kemendikdasmen.png" alt="Logo Tut Wuri Handayani">
       
-      <h1 class="login-title">TKA SD 2027</h1>
+      <!-- Label Beta diubah menyatu dengan judul agar elegan -->
+      <h1 class="login-title">
+        TKA SD 2026 
+        <span class="beta-pill">BETA</span>
+      </h1>
       <p class="login-sub">TES KEMAMPUAN AKADEMIK &middot; SIMULASI CBT</p>
 
       <div class="field">
@@ -437,7 +463,6 @@
   <!-- ===================== INSTRUCTIONS SCREEN ===================== -->
   <section class="screen" id="screen-instr">
     <div class="instr-wrap">
-
       <div class="glass-light data-card">
         <div class="stamp">
           <div class="stamp-inner">
@@ -453,7 +478,6 @@
         <div class="data-row"><span class="lbl">Jumlah Soal</span><span class="val" id="dpJumlah">-</span></div>
         <div class="data-row"><span class="lbl">Durasi</span><span class="val" id="dpDurasi">-</span></div>
       </div>
-
       <div class="glass-light rules-card">
         <h2>Tata Tertib Ujian Berbasis Komputer</h2>
         <ol class="instr-list">
@@ -472,7 +496,6 @@
           <button class="btn btn-primary" id="btnMulai" style="margin-top:0;" disabled>Mulai Mengerjakan Soal</button>
         </div>
       </div>
-
     </div>
   </section>
 
@@ -482,7 +505,6 @@
       <div class="glass topbar">
         <div class="topbar-left">
           <img class="emblem-sm" src="logo-kemendikdasmen.png" alt="Logo Tut Wuri Handayani">
-          
           <div>
             <div class="topbar-title">TKA SD 2026 &middot; <span id="examMapelLabel">Matematika</span></div>
             <div class="topbar-sub" id="examProgressLabel">Soal 1 dari 8</div>
@@ -494,7 +516,6 @@
             <button class="btn btn-ghost" id="btnFontDown" style="padding:6px 10px; font-size:12px;" title="Perkecil Huruf">A-</button>
             <button class="btn btn-ghost" id="btnFontUp" style="padding:6px 10px; font-size:12px;" title="Perbesar Huruf">A+</button>
           </div>
-
           <div class="student-chip">
             <div class="nm" id="chipNama">-</div>
             <div class="sc" id="chipSekolah">-</div>
@@ -508,7 +529,6 @@
           </div>
         </div>
       </div>
-
       <div class="exam-body">
         <div class="glass question-card">
           <div class="q-progress" id="qProgress">SOAL 1 DARI 8</div>
@@ -525,7 +545,6 @@
             </div>
           </div>
         </div>
-
         <div class="glass navigator">
           <h3>NAVIGASI SOAL</h3>
           <div class="nav-grid" id="navGrid"></div>
@@ -560,7 +579,6 @@
         <div class="rb-item"><b id="rbWaktu" style="color:var(--sky-accent);">0:00</b><span>Waktu Terpakai</span></div>
       </div>
       <div class="review-list" id="reviewList"></div>
-      
       <div class="instr-actions">
         <button class="btn btn-ghost" id="btnCetak" style="flex:1;">Cetak Hasil (PDF)</button>
         <button class="btn btn-primary" id="btnUlangi" style="flex:1;">Ulangi Simulasi</button>
@@ -577,6 +595,26 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- ===================== WELCOME BETA MODAL ===================== -->
+<div class="modal-overlay" id="betaModal">
+  <div class="glass modal-card" style="position:relative; overflow:hidden;">
+    <!-- Dekorasi efek glowing khusus untuk beta modal -->
+    <div style="position:absolute; top:-50px; left:-50px; width:150px; height:150px; background:var(--gold-accent); filter:blur(60px); opacity:0.25; pointer-events:none;"></div>
+    <div style="position:absolute; bottom:-50px; right:-50px; width:150px; height:150px; background:var(--sky-accent); filter:blur(60px); opacity:0.2; pointer-events:none;"></div>
+    
+    <div style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; background:rgba(240,180,41,0.15); border:1px solid rgba(240,180,41,0.4); color:var(--gold-accent); border-radius:99px; font-size:11.5px; font-weight:800; letter-spacing:1px; margin-bottom:20px;">
+      <span style="width:6px; height:6px; border-radius:50%; background:var(--gold-accent); box-shadow:0 0 6px var(--gold-accent); animation: pulseRing 1s infinite;"></span>
+      BETA TESTER
+    </div>
+
+    <h2>Selamat Datang, Pionir!</h2>
+    <p style="font-size:13.5px; color:#a9c6ea; line-height:1.65; margin:0 0 28px;">Sistem Ujian CBT ini masih dalam tahap pengujian <b>(Beta)</b>. Terima kasih telah meluangkan waktu untuk menguji sistem kami. Masukanmu sangat berarti untuk penyempurnaan ke depan.</p>
+    
+    <button class="btn btn-primary" id="btnTutupBeta" style="background:linear-gradient(135deg, var(--gold-accent), #ffd873); color:#3a2600; box-shadow:0 8px 24px rgba(240,180,41,0.3);">Mulai Eksplorasi &rarr;</button>
+  </div>
+</div>
+
+<!-- ===================== CONFIRM EXAM MODAL ===================== -->
 <div class="modal-overlay" id="confirmModal">
   <div class="glass modal-card">
     <h3>Yakin selesaikan ujian?</h3>
@@ -605,6 +643,26 @@ function shuffleArray(array) {
   }
   return arr;
 }
+
+/* =========================================================================
+   INISIALISASI BETA MODAL (Session Storage agar tidak muncul terus)
+   ========================================================================= */
+window.addEventListener("DOMContentLoaded", () => {
+  if (!sessionStorage.getItem("betaWelcomed")) {
+    const bm = el("betaModal");
+    bm.style.display = "flex"; 
+    // Force browser reflow untuk memicu animasi transisi
+    void bm.offsetWidth;
+    bm.classList.add("active");
+  }
+});
+
+el("btnTutupBeta").addEventListener("click", () => {
+  const bm = el("betaModal");
+  bm.classList.remove("active");
+  sessionStorage.setItem("betaWelcomed", "true");
+  setTimeout(() => { bm.style.display = "none"; }, 400); // Sesuai durasi CSS transition
+});
 
 /* =========================================================================
    DATA SOAL
