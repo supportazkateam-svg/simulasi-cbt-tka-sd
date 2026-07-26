@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CBT TKA SD 2026 - Beta</title>
 <!-- Meta Description Profesional untuk Google -->
-<meta name="description" content="Platform Buatan Komunitas Pendidikan Simulasi CBT Tes Kemampuan Akademik (TKA) SD 2026. Latihan soal terstruktur dengan sistem pengamanan ujian terpadu.">
+<meta name="description" content="Platform resmi Simulasi CBT Tes Kemampuan Akademik (TKA) SD 2026. Latihan soal terstruktur dengan sistem pengamanan ujian terpadu.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -479,7 +479,7 @@
           <input type="text" id="inpKelas" placeholder="Contoh: VI (Enam)" autocomplete="off">
         </div>
         <div class="field">
-          <label for="inpMapel">Mata Pelajaran Wajib</label>
+          <label for="inpMapel">Mata Pelajaran</label>
           <select id="inpMapel">
             <option value="matematika">Matematika</option>
             <option value="bindo">Bahasa Indonesia</option>
@@ -751,7 +751,7 @@ el("btnTutupBeta").addEventListener("click", () => {
 });
 
 /* =========================================================================
-   DATA SOAL & STATE
+   DATA SOAL & STATE (BUGFIX: Database IPAS Ditambahkan)
    ========================================================================= */
 const SUBJECTS = {
   matematika: {
@@ -775,6 +775,16 @@ const SUBJECTS = {
       { text: "Kalimat berikut yang menggunakan kata baku adalah ...", options: ["Saya akan mempraktekkan ilmu itu.","Saya akan mempraktikkan ilmu itu.","Saya akan mempraktek ilmu itu.","Saya akan praktekkan ilmu itu."], correct: 1, explanation: "Bentuk baku yang tepat adalah \"mempraktikkan\"." },
       { text: "Ide pokok sebuah paragraf biasanya terdapat pada ...", options: ["judul teks","kalimat utama","kalimat penutup","catatan kaki"], correct: 1, explanation: "Ide pokok terkandung dalam kalimat utama paragraf." },
       { text: "Teks yang menjelaskan langkah-langkah membuat sesuatu disebut teks ...", options: ["deskripsi","narasi","prosedur","eksposisi"], correct: 2, explanation: "Teks prosedur berisi langkah-langkah melakukan atau membuat sesuatu." }
+    ]
+  },
+  ipas: {
+    label: "Ilmu Pengetahuan Alam dan Sosial (IPAS)", duration: 15 * 60,
+    questions: [
+      { text: "Planet yang dijuluki sebagai planet merah adalah ...", options: ["Venus", "Mars", "Jupiter", "Saturnus"], correct: 1, explanation: "Mars dijuluki planet merah karena permukaan dan debunya banyak mengandung debu dan batuan besi." },
+      { text: "Bagian tumbuhan yang berfungsi sebagai tempat berlangsungnya fotosintesis adalah ...", options: ["Akar", "Batang", "Daun", "Bunga"], correct: 2, explanation: "Daun mengandung klorofil yang merupakan tempat utama terjadinya proses fotosintesis pada tumbuhan hijau." },
+      { text: "Sumber energi utama dan terbesar di bumi adalah ...", options: ["Batu bara", "Matahari", "Angin", "Bumi"], correct: 1, explanation: "Matahari adalah pusat tata surya sekaligus sumber energi cahaya dan panas terbesar bagi kehidupan di bumi." },
+      { text: "Hewan pemakan daging digolongkan ke dalam kelompok ...", options: ["Herbivora", "Karnivora", "Omnivora", "Insektivora"], correct: 1, explanation: "Karnivora adalah hewan yang sumber makanan utamanya adalah daging hewan lain." },
+      { text: "Berikut ini yang merupakan contoh sumber daya alam yang dapat diperbarui adalah ...", options: ["Minyak bumi", "Batu bara", "Sinar matahari", "Emas"], correct: 2, explanation: "Sinar matahari merupakan sumber daya alam yang selalu ada, tidak akan pernah habis terpakai dan terus diperbarui oleh alam." }
     ]
   }
 };
@@ -827,7 +837,9 @@ el("loginForm").addEventListener("submit", (e) => {
   
   state.student = { nama: inpNama.value.trim(), sekolah: inpSekolah.value.trim(), kelas: inpKelas.value.trim() };
   state.subjectKey = mapel;
-  const subj = SUBJECTS[mapel];
+  
+  // Bug yang sudah di-fix: Variabel subj tidak akan undefined lagi saat IPAS dipilih
+  const subj = SUBJECTS[mapel]; 
   state.questions = subj.questions;
   state.duration = subj.duration;
 
@@ -998,7 +1010,6 @@ document.addEventListener("contextmenu", (e) => {
 
 document.addEventListener("keydown", (e) => {
   if (el("screen-exam").classList.contains("active")) {
-    // Blokir pintasan Ctrl+C, Ctrl+X, Ctrl+A, Ctrl+U, F12 (Inspeksi Elemen)
     if (
       (e.ctrlKey && (e.key === 'c' || e.key === 'x' || e.key === 'a' || e.key === 'u')) ||
       e.key === 'F12'
