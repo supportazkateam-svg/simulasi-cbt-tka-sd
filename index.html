@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CBT TKA SD 2026 - Beta</title>
+<title id="docTitle">CBT TKA SD 2026 - Beta</title>
 <!-- Meta Description Profesional untuk Google -->
-<meta name="description" content="Platform Buatan Komunitas Pendidikan Simulasi CBT Tes Kemampuan Akademik (TKA) SD 2026. Latihan soal terstruktur dengan sistem pengamanan ujian terpadu.">
+<meta name="description" content="Platform resmi Simulasi CBT Tes Kemampuan Akademik (TKA) SD 2026. Latihan soal terstruktur dengan sistem pengamanan ujian terpadu.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -97,13 +97,29 @@
     transition:transform .15s ease;
   }
   .login-title{display:flex; align-items:center; justify-content:center; gap:10px; font-size:24px; font-weight:800; letter-spacing:0.3px; margin:0 0 2px;}
+  
+  /* Beta Elements */
   .beta-pill{
     font-size:10px; font-family:'IBM Plex Mono',monospace; font-weight:700;
     background:rgba(240,180,41,0.15); border:1px solid rgba(240,180,41,0.5);
     color:var(--gold-accent); padding:4px 8px; border-radius:8px;
     letter-spacing:1px; transform:translateY(-1px);
     box-shadow: 0 0 10px rgba(240,180,41,0.2);
+    display: inline-block; /* Controlled by JS */
   }
+  .beta-countdown {
+    font-size: 11.5px;
+    color: var(--gold-accent);
+    background: rgba(240,180,41,0.1);
+    border: 1px dashed rgba(240,180,41,0.4);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin: -10px auto 24px;
+    display: none; /* Controlled by JS */
+    letter-spacing: 0.3px;
+    max-width: max-content;
+  }
+  .beta-countdown b { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; margin-left: 4px; }
   
   .login-sub{font-size:13px; color:#bcd3f0; margin:0 0 28px; font-weight:500; letter-spacing:0.4px;}
   .field{text-align:left; margin-bottom:16px;}
@@ -461,9 +477,12 @@
       
       <h1 class="login-title">
         TKA SD 2026 
-        <span class="beta-pill">BETA</span>
+        <span class="beta-pill" id="betaPill">BETA</span>
       </h1>
       <p class="login-sub">TES KEMAMPUAN AKADEMIK &middot; SIMULASI CBT</p>
+      
+      <!-- Widget Real-time Countdown -->
+      <div class="beta-countdown" id="betaCountdown">Memuat waktu...</div>
 
       <form id="loginForm">
         <div class="field">
@@ -479,7 +498,7 @@
           <input type="text" id="inpKelas" placeholder="Contoh: VI (Enam)" autocomplete="off">
         </div>
         <div class="field">
-          <label for="inpMapel">Mata Pelajaran Wajib</label>
+          <label for="inpMapel">Mata Pelajaran</label>
           <select id="inpMapel">
             <option value="matematika">Matematika</option>
             <option value="bindo">Bahasa Indonesia</option>
@@ -693,6 +712,45 @@ function shuffleArray(array) {
 }
 
 /* =========================================================================
+   BETA COUNTDOWN LOGIC (Selasa, 28 Juli 2026 - 15:00:00 WIB)
+   ========================================================================= */
+// WIB = UTC+7. Target diubah ke 15:00:00.
+const betaEndDate = new Date("2026-07-28T15:00:00+07:00").getTime();
+let isBetaActive = false;
+
+function updateBetaCountdown() {
+  const now = Date.now();
+  const distance = betaEndDate - now;
+
+  const bCountdown = el("betaCountdown");
+  const bPill = el("betaPill");
+  const dTitle = el("docTitle");
+
+  if (distance > 0) {
+    isBetaActive = true;
+    const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+    if (bCountdown) {
+      bCountdown.style.display = "block";
+      bCountdown.innerHTML = `Beta berakhir dalam: <b>${d}h ${h}j ${m}m ${s}d</b>`;
+    }
+    if (bPill) bPill.style.display = "inline-block";
+  } else {
+    // Waktu Habis -> Mode Normal (CBT berjalan normal)
+    isBetaActive = false;
+    if (bCountdown) bCountdown.style.display = "none";
+    if (bPill) bPill.style.display = "none";
+    if (dTitle) dTitle.textContent = "CBT TKA SD 2026";
+  }
+}
+// Jalankan Real-time
+updateBetaCountdown();
+setInterval(updateBetaCountdown, 1000);
+
+/* =========================================================================
    SISTEM BLOKIR PERANGKAT (LOCAL STORAGE)
    ========================================================================= */
 let blockInterval = null;
@@ -732,10 +790,10 @@ if (checkDeviceBlock()) {
 }
 
 /* =========================================================================
-   INISIALISASI BETA MODAL 
+   INISIALISASI BETA MODAL (Hanya Tampil Jika Beta Masih Aktif)
    ========================================================================= */
 window.addEventListener("DOMContentLoaded", () => {
-  if (!sessionStorage.getItem("betaWelcomed") && !localStorage.getItem("cbt_block_until")) {
+  if (isBetaActive && !sessionStorage.getItem("betaWelcomed") && !localStorage.getItem("cbt_block_until")) {
     const bm = el("betaModal");
     bm.style.display = "flex"; 
     void bm.offsetWidth;
@@ -837,8 +895,6 @@ el("loginForm").addEventListener("submit", (e) => {
   
   state.student = { nama: inpNama.value.trim(), sekolah: inpSekolah.value.trim(), kelas: inpKelas.value.trim() };
   state.subjectKey = mapel;
-  
-  // Bug yang sudah di-fix: Variabel subj tidak akan undefined lagi saat IPAS dipilih
   const subj = SUBJECTS[mapel]; 
   state.questions = subj.questions;
   state.duration = subj.duration;
