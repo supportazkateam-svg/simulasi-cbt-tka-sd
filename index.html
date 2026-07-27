@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title id="docTitle">CBT TKA SD 2026 - Beta</title>
-<meta name="description" content="Platform Buatan Siswa SD | Simulasi CBT Tes Kemampuan Akademik (TKA) SD 2026. Latihan soal terstruktur dengan sistem pengamanan ujian terpadu.">
+<meta name="description" content="Platform resmi Simulasi CBT Tes Kemampuan Akademik (TKA) SD 2026. Latihan soal terstruktur dengan sistem pengamanan ujian terpadu.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -190,7 +190,9 @@
   .question-card{flex:1; padding:34px 38px; min-height:400px; display:flex; flex-direction:column; overflow-y:auto;}
   
   /* STIMULUS & NEW QUESTION TYPES */
-  .q-progress{font-size:12px; font-weight:700; letter-spacing:0.4px; color:var(--sky-accent); text-transform:uppercase; margin-bottom:6px;}
+  .q-progress{display:flex; align-items:center; gap:12px; font-size:12px; font-weight:700; letter-spacing:0.4px; color:var(--sky-accent); text-transform:uppercase; margin-bottom:6px;}
+  .q-level-badge{background:rgba(92,200,247,0.15); border:1px solid rgba(92,200,247,0.4); padding:3px 8px; border-radius:6px; font-size:10px; color:var(--sky-accent);}
+  
   .q-stimulus {
       background: rgba(255, 255, 255, 0.05);
       border-left: 4px solid var(--gold-accent);
@@ -373,7 +375,7 @@
           <input type="text" id="inpKelas" placeholder="Contoh: VI (Enam)" autocomplete="off">
         </div>
         <div class="field">
-          <label for="inpMapel">Mata Pelajaran Wajib</label>
+          <label for="inpMapel">Mata Pelajaran</label>
           <select id="inpMapel">
             <option value="matematika">Matematika</option>
             <option value="bindo">Bahasa Indonesia</option>
@@ -407,7 +409,7 @@
         <ol class="instr-list">
           <li><span class="instr-num">1</span><span class="instr-text">Waktu pengerjaan akan berjalan otomatis.</span></li>
           <li><span class="instr-num">2</span><span class="instr-text">Terdapat 3 variasi tipe soal: Pilihan Ganda (1 jawaban), Pilihan Ganda Kompleks (>1 jawaban), dan matriks Benar/Salah.</span></li>
-          <li><span class="instr-num">3</span><span class="instr-text">Apabila ragu, tandai soal tersebut dengan tombol <b>Ragu-ragu</b>.</span></li>
+          <li><span class="instr-num">3</span><span class="instr-text">Apabila ragu, tandai soal tersebut dengan tombol <b>Ragu-ragu</b>. Sistem menggunakan simulasi bobot IRT, pastikan menjawab sebaik mungkin.</span></li>
           <li><span class="instr-num">4</span><span class="instr-text">Fitur <b>Copy-Paste</b> dan klik kanan dikunci selama ujian berlangsung.</span></li>
           <li><span class="instr-num">5</span><span class="instr-text" style="color:var(--danger); font-weight:600;">Keluar dari layar penuh (Fullscreen) atau berpindah tab memicu pemblokiran perangkat selama 20 menit pada pelanggaran kedua.</span></li>
         </ol>
@@ -445,7 +447,10 @@
       </div>
       <div class="exam-body">
         <div class="glass question-card">
-          <div class="q-progress" id="qProgress">SOAL 1 DARI 8</div>
+          <div class="q-progress">
+            <span id="qProgress">SOAL 1 DARI 8</span>
+            <span class="q-level-badge" id="qLevelBadge">Level 1</span>
+          </div>
           <div id="qHelper"></div>
           <div class="q-text" id="qText">Memuat soal...</div>
           <div class="options" id="qOptions"></div>
@@ -644,96 +649,96 @@ const STIMULUS = {
   b12: `<div class="q-stimulus"><b>STIMULUS 12: SIKLON TROPIS</b><br>Syarat: Suhu air laut > 26,5°C memicu penguapan. Udara naik ciptakan area tekanan sangat rendah. Angin sekitar tersedot masuk. Efek Coriolis (rotasi bumi) membelokkan angin jadi pusaran raksasa, picu hujan & gelombang hancurkan daratan.</div>`
 };
 
-/* --- DATABASE SOAL UJI COBA (BETA MODE) --- */
+/* --- DATABASE SOAL UJI COBA (BETA MODE) DENGAN LEVEL IRT --- */
 const SUBJECTS_BETA = {
   matematika: {
     label: "Matematika (Beta)", duration: 15 * 60,
     questions: [
-      { type: 'pg', text: "Uji Coba 1: Hasil dari 3/4 + 1/8 adalah ...", options: ["5/8", "7/8", "1", "4/12", "3/8"], correct: 1 },
-      { type: 'pgk', text: "Uji Coba 2: Manakah dari angka berikut yang merupakan bilangan genap?", options: ["2", "3", "4", "5", "6"], correct: [0, 2, 4] },
-      { type: 'kategori', text: "Uji Coba 3: Tentukan Benar atau Salah dari operasi hitung berikut!", categories: ["Benar", "Salah"], statements: [{text:"1 + 1 = 2", correct:0}, {text:"2 x 3 = 5", correct:1}] }
+      { type: 'pg', level: 1, text: "Uji Coba 1: Hasil dari 3/4 + 1/8 adalah ...", options: ["5/8", "7/8", "1", "4/12", "3/8"], correct: 1 },
+      { type: 'pgk', level: 1, text: "Uji Coba 2: Manakah dari angka berikut yang merupakan bilangan genap?", options: ["2", "3", "4", "5", "6"], correct: [0, 2, 4] },
+      { type: 'kategori', level: 2, text: "Uji Coba 3: Tentukan Benar atau Salah dari operasi hitung berikut!", categories: ["Benar", "Salah"], statements: [{text:"1 + 1 = 2", correct:0}, {text:"2 x 3 = 5", correct:1}] }
     ]
   },
   bindo: {
     label: "Bahasa Indonesia (Beta)", duration: 15 * 60,
     questions: [
-      { type: 'pg', text: "Uji Coba 1: Sinonim dari kata 'gembira' adalah ...", options: ["sedih", "senang", "marah", "takut", "gundah"], correct: 1 },
-      { type: 'pgk', text: "Uji Coba 2: Manakah dari kata berikut yang menunjukkan nama warna?", options: ["Merah", "Lari", "Biru", "Cantik", "Hijau"], correct: [0, 2, 4] },
-      { type: 'kategori', text: "Uji Coba 3: Tentukan jenis kalimat berikut (Fakta/Opini)!", categories: ["Fakta", "Opini"], statements: [{text:"Matahari terbit di sebelah timur.", correct:0}, {text:"Bakso adalah makanan paling enak.", correct:1}] }
+      { type: 'pg', level: 1, text: "Uji Coba 1: Sinonim dari kata 'gembira' adalah ...", options: ["sedih", "senang", "marah", "takut", "gundah"], correct: 1 },
+      { type: 'pgk', level: 1, text: "Uji Coba 2: Manakah dari kata berikut yang menunjukkan nama warna?", options: ["Merah", "Lari", "Biru", "Cantik", "Hijau"], correct: [0, 2, 4] },
+      { type: 'kategori', level: 2, text: "Uji Coba 3: Tentukan jenis kalimat berikut (Fakta/Opini)!", categories: ["Fakta", "Opini"], statements: [{text:"Matahari terbit di sebelah timur.", correct:0}, {text:"Bakso adalah makanan paling enak.", correct:1}] }
     ]
   }
 };
 
-/* --- DATABASE SOAL NORMAL (60 SOAL ASLI) --- */
+/* --- DATABASE SOAL NORMAL (60 SOAL ASLI) DENGAN LEVEL IRT --- */
 const SUBJECTS_NORMAL = {
   matematika: {
     label: "Matematika (Numerasi)", duration: 120 * 60,
     questions: [
-      { type: 'pg', text: STIMULUS.m1 + "1. Berdasarkan tabel, peningkatan produksi padi tertinggi terjadi pada periode tahun...", options: ["2021 ke 2022", "2022 ke 2023", "2023 ke 2024", "2024 ke 2025", "Tidak ada peningkatan"], correct: 2 },
-      { type: 'pgk', text: STIMULUS.m1 + "2. Berdasarkan data, pernyataan manakah saja yang bernilai benar?", options: ["Produksi jagung selalu mengalami penurunan", "Penurunan jagung hanya di tahun 2022 dan 2025", "Total produksi gabungan tertinggi di 2024", "Produksi padi tidak pernah turun", "Pada 2023, hasil panen jagung naik 20 ton"], correct: [1, 2, 4] },
-      { type: 'kategori', text: STIMULUS.m1 + "3. Tentukan kebenaran setiap pernyataan berikut berdasarkan tabel!", categories: ["Benar", "Salah"], statements: [{text:"Rata-rata produksi padi 5 tahun adalah 144 ton/tahun.", correct:0}, {text:"Selisih produksi terbesar padi & jagung terjadi pada 2022.", correct:0}, {text:"Total hasil panen jagung selama 5 tahun kurang dari 450 ton.", correct:1}] },
-      { type: 'pg', text: STIMULUS.m1 + "4. Apabila pola rata-rata kenaikan total produksi gabungan dari 2021 hingga 2024 berlanjut, perkiraan produksi gabungan tahun 2026 adalah...", options: ["285 ton", "290 ton", "310 ton", "315 ton", "320 ton"], correct: 3 },
-      { type: 'pgk', text: STIMULUS.m1 + "5. Insentif diberikan jika selisih padi & jagung > 50 ton. Tahun berapakah insentif cair?", options: ["Tahun 2021", "Tahun 2022", "Tahun 2023", "Tahun 2024", "Tahun 2025"], correct: [1, 4] },
-      { type: 'pg', text: STIMULUS.m2 + "6. Jarak sebenarnya Gerbang Utama ke Sumber Air Bersih adalah...", options: ["150 meter", "200 meter", "250 meter", "300 meter", "350 meter"], correct: 3 },
-      { type: 'pgk', text: STIMULUS.m2 + "7. Manakah pernyataan yang bernilai benar?", options: ["Jarak sebenarnya Gerbang - Pos Kesehatan adalah 150m", "Jarak sebenarnya Pos Kesehatan - Tenda Utama adalah 100m", "Perjalanan Pos - Sumber Air via Tenda adalah 250m", "1 cm di denah = 250m asli", "Jarak sebenarnya Tenda - Sumber Air adalah 200m"], correct: [0, 1, 4] },
-      { type: 'kategori', text: STIMULUS.m2 + "8. Evaluasi ketepatan spasial berikut!", categories: ["Benar", "Salah"], statements: [{text:"Jika denah diperbesar 2x lipat, skala menjadi 1:5.000.", correct:1}, {text:"Jarak sebenarnya Gerbang-Pos lebih panjang dari Tenda-Sumber Air.", correct:1}, {text:"Jalan setapak 50 meter akan digambar sepanjang 2 cm.", correct:0}] },
-      { type: 'pg', text: STIMULUS.m2 + "9. Jika diganti skala 1:1.000, panjang gambar Pos Kesehatan ke Tenda Utama adalah...", options: ["2 cm", "5 cm", "8 cm", "10 cm", "12 cm"], correct: 3 },
-      { type: 'pgk', text: STIMULUS.m2 + "10. Regu A menempuh Gerbang-Pos-Tenda. Regu B lurus Gerbang-Sumber Air. Pernyataan yang tepat?", options: ["Total jarak Regu A adalah 250 meter", "Selisih jarak Regu A & B adalah 50 meter", "Regu B berjalan lebih jauh 100 meter", "Jarak denah Regu A adalah 10 cm", "Lintasan asli Regu B adalah 3.000 cm"], correct: [0, 1, 3] },
-      { type: 'pg', text: STIMULUS.m3 + "11. Berapa liter air yang dihabiskan untuk mencuci peralatan dapur dan memasak?", options: ["30 liter", "60 liter", "90 liter", "120 liter", "150 liter"], correct: 2 },
-      { type: 'pgk', text: STIMULUS.m3 + "12. Penggabungan aktivitas mana yang mengonsumsi air lebih besar atau sama dengan 240 liter?", options: ["Mencuci pakaian & menyiram tanaman", "Mencuci dapur & keperluan minum", "Mandi dan sanitasi toilet (Hanya ini)", "Mencuci pakaian & Mencuci dapur", "Menyiram tanaman & Dapur"], correct: [2, 3] },
-      { type: 'kategori', text: STIMULUS.m3 + "13. Tentukan kebenaran analisis volumetrik berikut!", categories: ["Benar", "Salah"], statements: [{text:"Volume air minum keluarga adalah 30 liter/hari.", correct:0}, {text:"Setiap individu menghabiskan rata-rata 150 liter total/hari.", correct:0}, {text:"Air mandi setara tiga kali lipat air dapur.", correct:0}] },
-      { type: 'pg', text: STIMULUS.m3 + "14. Jika penghematan mandi sebesar 20%, berapa total penghematannya?", options: ["54 liter", "90 liter", "108 liter", "120 liter", "270 liter"], correct: 0 },
-      { type: 'pgk', text: STIMULUS.m3 + "15. Pernyataan perbandingan mana yang paling akurat?", options: ["Rasio air minum dengan siram tanaman 1:2", "Rasio cuci pakaian dengan mandi 5:9", "Air dapur porsinya setengah dari cuci pakaian", "Siram & minum setara dengan air dapur", "Mandi lebih banyak dari semua gabungan aktivitas lainnya"], correct: [0, 1, 3] },
-      { type: 'pg', text: STIMULUS.m4 + "16. Keuntungan bersih terbesar terjadi pada bulan...", options: ["Januari", "Februari", "Maret", "April", "Mei"], correct: 3 },
-      { type: 'pgk', text: STIMULUS.m4 + "17. Analisis performa kantin manakah yang benar?", options: ["Keuntungan Januari persentasenya sama dengan Mei", "Keuntungan terkecil terjadi pada bulan Mei (Rp500rb)", "Terjadi penurunan keuntungan dari Februari ke Maret", "Keuntungan bersih bulan April mencapai Rp900rb", "Total pendapatan 5 bulan melebihi Rp11.000.000"], correct: [1, 3, 4] },
-      { type: 'kategori', text: STIMULUS.m4 + "18. Tentukan keabsahan kesimpulan keuangan kantin!", categories: ["Sesuai", "Tidak Sesuai"], statements: [{text:"Rata-rata pengeluaran operasional per bulan adalah Rp1.620.000.", correct:1}, {text:"Total keuntungan 5 bulan adalah Rp3.400.000.", correct:0}, {text:"April kontribusinya lebih dari 25% thdp total keuntungan.", correct:0}] },
-      { type: 'pg', text: STIMULUS.m4 + "19. Rata-rata keuntungan bersih per bulan adalah...", options: ["Rp640.000", "Rp680.000", "Rp700.000", "Rp720.000", "Rp750.000"], correct: 1 },
-      { type: 'pgk', text: STIMULUS.m4 + "20. Bulan mana dengan tingkat efisiensi (Keuntungan/Omzet) >= 30%?", options: ["Januari", "Februari", "Maret", "April", "Mei"], correct: [0, 2, 3] },
-      { type: 'pg', text: STIMULUS.m5 + "21. Berapakah jumlah kursi pada deretan baris ke-6?", options: ["30 kursi", "34 kursi", "38 kursi", "42 kursi", "46 kursi"], correct: 1 },
-      { type: 'pgk', text: STIMULUS.m5 + "22. Manakah karakteristik susunan yang benar?", options: ["Baris ke-8 memuat 42 kursi", "Selisih penambahan kursi antarbaris adalah 4", "Total kursi baris 1 & 2 adalah 32", "Baris ke-5 memiliki jumlah ganjil", "Jumlah kursi baris ke-4 adalah 26"], correct: [0, 1, 2, 4] },
-      { type: 'kategori', text: STIMULUS.m5 + "23. Ujilah daya tampung berikut!", categories: ["Benar", "Salah"], statements: [{text:"Total kapasitas ruang rapat 224 kursi.", correct:0}, {text:"Gabungan baris 3 & 6 sama dengan baris 1 & 8.", correct:0}, {text:"Setengah kapasitas ruang ada di 4 baris terdepan.", correct:1}] },
-      { type: 'pg', text: STIMULUS.m5 + "24. Tiket Rp40rb u/ baris 1, 2, 3. Berapa total jika penuh?", options: ["Rp1.640.000", "Rp2.160.000", "Rp2.240.000", "Rp2.360.000", "Rp2.400.000"], correct: 1 },
-      { type: 'pgk', text: STIMULUS.m5 + "25. Jika baris 7 & 8 khusus VIP, konsekuensinya:", options: ["Jumlah VIP adalah 80 kursi", "VIP baris ke-7 berjumlah 38 unit", "Sisa reguler (baris 1-6) berjumlah 144 unit", "Jumlah VIP lebih banyak dari reguler", "Baris ke-8 memiliki VIP 42 unit"], correct: [0, 2, 4] },
-      { type: 'pg', text: STIMULUS.m6 + "26. Berapakah rata-rata (mean) evaluasi matematika siswa?", options: ["7,65", "7,85", "8,00", "8,15", "8,25"], correct: 1 },
-      { type: 'pgk', text: STIMULUS.m6 + "27. Pernyataan statistik manakah yang sahih?", options: ["Modus data adalah 8", "Total siswa adalah 42 anak", "Jumlah anak bernilai >8 adalah 14 anak", "Median data adalah 7", "Siswa bernilai 10 paling sedikit"], correct: [0, 2, 4] },
-      { type: 'kategori', text: STIMULUS.m6 + "28. Analisislah kriteria berikut!", categories: ["Benar", "Salah"], statements: [{text:"Lebih dari 50% siswa mendapat nilai > 7.", correct:0}, {text:"Banyaknya anak nilai 7 sama dengan gabungan nilai 6 & 10.", correct:0}, {text:"Median data tersebut bernilai beda dengan modusnya.", correct:1}] },
-      { type: 'pg', text: STIMULUS.m6 + "29. Jika standar nilai 7. Persentase siswa yang tuntas belajar?", options: ["12,5%", "35,0%", "75,0%", "87,5%", "90,0%"], correct: 3 },
-      { type: 'pgk', text: STIMULUS.m6 + "30. Peluang (Probabilitas) yang bernilai benar:", options: ["Peluang nilai 10 adalah 4/40", "Peluang nilai < 8 adalah 14/40", "Peluang nilai 8 adalah yang terbesar", "Peluang nilai 9 adalah 1/4", "Peluang nilai ganjil sama dengan genap"], correct: [1, 2, 3] }
+      { type: 'pg', level: 1, text: STIMULUS.m1 + "1. Berdasarkan tabel, peningkatan produksi padi tertinggi terjadi pada periode tahun...", options: ["2021 ke 2022", "2022 ke 2023", "2023 ke 2024", "2024 ke 2025", "Tidak ada peningkatan"], correct: 2 },
+      { type: 'pgk', level: 2, text: STIMULUS.m1 + "2. Berdasarkan data, pernyataan manakah saja yang bernilai benar?", options: ["Produksi jagung selalu mengalami penurunan", "Penurunan jagung hanya di tahun 2022 dan 2025", "Total produksi gabungan tertinggi di 2024", "Produksi padi tidak pernah turun", "Pada 2023, hasil panen jagung naik 20 ton"], correct: [1, 2, 4] },
+      { type: 'kategori', level: 2, text: STIMULUS.m1 + "3. Tentukan kebenaran setiap pernyataan berikut berdasarkan tabel!", categories: ["Benar", "Salah"], statements: [{text:"Rata-rata produksi padi 5 tahun adalah 144 ton/tahun.", correct:0}, {text:"Selisih produksi terbesar padi & jagung terjadi pada 2022.", correct:0}, {text:"Total hasil panen jagung selama 5 tahun kurang dari 450 ton.", correct:1}] },
+      { type: 'pg', level: 3, text: STIMULUS.m1 + "4. Apabila pola rata-rata kenaikan total produksi gabungan dari 2021 hingga 2024 berlanjut, perkiraan produksi gabungan tahun 2026 adalah...", options: ["285 ton", "290 ton", "310 ton", "315 ton", "320 ton"], correct: 3 },
+      { type: 'pgk', level: 3, text: STIMULUS.m1 + "5. Insentif diberikan jika selisih padi & jagung > 50 ton. Tahun berapakah insentif cair?", options: ["Tahun 2021", "Tahun 2022", "Tahun 2023", "Tahun 2024", "Tahun 2025"], correct: [1, 4] },
+      { type: 'pg', level: 1, text: STIMULUS.m2 + "6. Jarak sebenarnya Gerbang Utama ke Sumber Air Bersih adalah...", options: ["150 meter", "200 meter", "250 meter", "300 meter", "350 meter"], correct: 3 },
+      { type: 'pgk', level: 2, text: STIMULUS.m2 + "7. Manakah pernyataan yang bernilai benar?", options: ["Jarak sebenarnya Gerbang - Pos Kesehatan adalah 150m", "Jarak sebenarnya Pos Kesehatan - Tenda Utama adalah 100m", "Perjalanan Pos - Sumber Air via Tenda adalah 250m", "1 cm di denah = 250m asli", "Jarak sebenarnya Tenda - Sumber Air adalah 200m"], correct: [0, 1, 4] },
+      { type: 'kategori', level: 3, text: STIMULUS.m2 + "8. Evaluasi ketepatan spasial berikut!", categories: ["Benar", "Salah"], statements: [{text:"Jika denah diperbesar 2x lipat, skala menjadi 1:5.000.", correct:1}, {text:"Jarak sebenarnya Gerbang-Pos lebih panjang dari Tenda-Sumber Air.", correct:1}, {text:"Jalan setapak 50 meter akan digambar sepanjang 2 cm.", correct:0}] },
+      { type: 'pg', level: 2, text: STIMULUS.m2 + "9. Jika diganti skala 1:1.000, panjang gambar Pos Kesehatan ke Tenda Utama adalah...", options: ["2 cm", "5 cm", "8 cm", "10 cm", "12 cm"], correct: 3 },
+      { type: 'pgk', level: 3, text: STIMULUS.m2 + "10. Regu A menempuh Gerbang-Pos-Tenda. Regu B lurus Gerbang-Sumber Air. Pernyataan yang tepat?", options: ["Total jarak Regu A adalah 250 meter", "Selisih jarak Regu A & B adalah 50 meter", "Regu B berjalan lebih jauh 100 meter", "Jarak denah Regu A adalah 10 cm", "Lintasan asli Regu B adalah 3.000 cm"], correct: [0, 1, 3] },
+      { type: 'pg', level: 1, text: STIMULUS.m3 + "11. Berapa liter air yang dihabiskan untuk mencuci peralatan dapur dan memasak?", options: ["30 liter", "60 liter", "90 liter", "120 liter", "150 liter"], correct: 2 },
+      { type: 'pgk', level: 2, text: STIMULUS.m3 + "12. Penggabungan aktivitas mana yang mengonsumsi air lebih besar atau sama dengan 240 liter?", options: ["Mencuci pakaian & menyiram tanaman", "Mencuci dapur & keperluan minum", "Mandi dan sanitasi toilet (Hanya ini)", "Mencuci pakaian & Mencuci dapur", "Menyiram tanaman & Dapur"], correct: [2, 3] },
+      { type: 'kategori', level: 3, text: STIMULUS.m3 + "13. Tentukan kebenaran analisis volumetrik berikut!", categories: ["Benar", "Salah"], statements: [{text:"Volume air minum keluarga adalah 30 liter/hari.", correct:0}, {text:"Setiap individu menghabiskan rata-rata 150 liter total/hari.", correct:0}, {text:"Air mandi setara tiga kali lipat air dapur.", correct:0}] },
+      { type: 'pg', level: 2, text: STIMULUS.m3 + "14. Jika penghematan mandi sebesar 20%, berapa total penghematannya?", options: ["54 liter", "90 liter", "108 liter", "120 liter", "270 liter"], correct: 0 },
+      { type: 'pgk', level: 3, text: STIMULUS.m3 + "15. Pernyataan perbandingan mana yang paling akurat?", options: ["Rasio air minum dengan siram tanaman 1:2", "Rasio cuci pakaian dengan mandi 5:9", "Air dapur porsinya setengah dari cuci pakaian", "Siram & minum setara dengan air dapur", "Mandi lebih banyak dari semua gabungan aktivitas lainnya"], correct: [0, 1, 3] },
+      { type: 'pg', level: 1, text: STIMULUS.m4 + "16. Keuntungan bersih terbesar terjadi pada bulan...", options: ["Januari", "Februari", "Maret", "April", "Mei"], correct: 3 },
+      { type: 'pgk', level: 2, text: STIMULUS.m4 + "17. Analisis performa kantin manakah yang benar?", options: ["Keuntungan Januari persentasenya sama dengan Mei", "Keuntungan terkecil terjadi pada bulan Mei (Rp500rb)", "Terjadi penurunan keuntungan dari Februari ke Maret", "Keuntungan bersih bulan April mencapai Rp900rb", "Total pendapatan 5 bulan melebihi Rp11.000.000"], correct: [1, 3, 4] },
+      { type: 'kategori', level: 3, text: STIMULUS.m4 + "18. Tentukan keabsahan kesimpulan keuangan kantin!", categories: ["Sesuai", "Tidak Sesuai"], statements: [{text:"Rata-rata pengeluaran operasional per bulan adalah Rp1.620.000.", correct:1}, {text:"Total keuntungan 5 bulan adalah Rp3.400.000.", correct:0}, {text:"April kontribusinya lebih dari 25% thdp total keuntungan.", correct:0}] },
+      { type: 'pg', level: 2, text: STIMULUS.m4 + "19. Rata-rata keuntungan bersih per bulan adalah...", options: ["Rp640.000", "Rp680.000", "Rp700.000", "Rp720.000", "Rp750.000"], correct: 1 },
+      { type: 'pgk', level: 3, text: STIMULUS.m4 + "20. Bulan mana dengan tingkat efisiensi (Keuntungan/Omzet) >= 30%?", options: ["Januari", "Februari", "Maret", "April", "Mei"], correct: [0, 2, 3] },
+      { type: 'pg', level: 1, text: STIMULUS.m5 + "21. Berapakah jumlah kursi pada deretan baris ke-6?", options: ["30 kursi", "34 kursi", "38 kursi", "42 kursi", "46 kursi"], correct: 1 },
+      { type: 'pgk', level: 2, text: STIMULUS.m5 + "22. Manakah karakteristik susunan yang benar?", options: ["Baris ke-8 memuat 42 kursi", "Selisih penambahan kursi antarbaris adalah 4", "Total kursi baris 1 & 2 adalah 32", "Baris ke-5 memiliki jumlah ganjil", "Jumlah kursi baris ke-4 adalah 26"], correct: [0, 1, 2, 4] },
+      { type: 'kategori', level: 3, text: STIMULUS.m5 + "23. Ujilah daya tampung berikut!", categories: ["Benar", "Salah"], statements: [{text:"Total kapasitas ruang rapat 224 kursi.", correct:0}, {text:"Gabungan baris 3 & 6 sama dengan baris 1 & 8.", correct:0}, {text:"Setengah kapasitas ruang ada di 4 baris terdepan.", correct:1}] },
+      { type: 'pg', level: 2, text: STIMULUS.m5 + "24. Tiket Rp40rb u/ baris 1, 2, 3. Berapa total jika penuh?", options: ["Rp1.640.000", "Rp2.160.000", "Rp2.240.000", "Rp2.360.000", "Rp2.400.000"], correct: 1 },
+      { type: 'pgk', level: 3, text: STIMULUS.m5 + "25. Jika baris 7 & 8 khusus VIP, konsekuensinya:", options: ["Jumlah VIP adalah 80 kursi", "VIP baris ke-7 berjumlah 38 unit", "Sisa reguler (baris 1-6) berjumlah 144 unit", "Jumlah VIP lebih banyak dari reguler", "Baris ke-8 memiliki VIP 42 unit"], correct: [0, 2, 4] },
+      { type: 'pg', level: 1, text: STIMULUS.m6 + "26. Berapakah rata-rata (mean) evaluasi matematika siswa?", options: ["7,65", "7,85", "8,00", "8,15", "8,25"], correct: 1 },
+      { type: 'pgk', level: 2, text: STIMULUS.m6 + "27. Pernyataan statistik manakah yang sahih?", options: ["Modus data adalah 8", "Total siswa adalah 42 anak", "Jumlah anak bernilai >8 adalah 14 anak", "Median data adalah 7", "Siswa bernilai 10 paling sedikit"], correct: [0, 2, 4] },
+      { type: 'kategori', level: 3, text: STIMULUS.m6 + "28. Analisislah kriteria berikut!", categories: ["Benar", "Salah"], statements: [{text:"Lebih dari 50% siswa mendapat nilai > 7.", correct:0}, {text:"Banyaknya anak nilai 7 sama dengan gabungan nilai 6 & 10.", correct:0}, {text:"Median data tersebut bernilai beda dengan modusnya.", correct:1}] },
+      { type: 'pg', level: 2, text: STIMULUS.m6 + "29. Jika standar nilai 7. Persentase siswa yang tuntas belajar?", options: ["12,5%", "35,0%", "75,0%", "87,5%", "90,0%"], correct: 3 },
+      { type: 'pgk', level: 3, text: STIMULUS.m6 + "30. Peluang (Probabilitas) yang bernilai benar:", options: ["Peluang nilai 10 adalah 4/40", "Peluang nilai < 8 adalah 14/40", "Peluang nilai 8 adalah yang terbesar", "Peluang nilai 9 adalah 1/4", "Peluang nilai ganjil sama dengan genap"], correct: [1, 2, 3] }
     ]
   },
   bindo: {
     label: "Bahasa Indonesia (Literasi)", duration: 120 * 60,
     questions: [
-      { type: 'pg', text: STIMULUS.b7 + "31. Mengapa terumbu karang dijuluki 'hutan hujan di bawah laut'?", options: ["Berada di area curah hujan tinggi", "Keanekaragaman hayati spesies yang sangat melimpah", "Bentuk fisiknya seperti pohon", "Menguasai sebagian besar laut", "Menghasilkan sumber air tawar"], correct: 1 },
-      { type: 'pgk', text: STIMULUS.b7 + "32. Apa fungsi penting terumbu karang bagi lingkungan?", options: ["Pelindung pantai dari abrasi", "Menyaring limbah pabrik", "Tempat tinggal dan cari makan biota", "Menurunkan suhu laut global", "Meredam energi gelombang badai"], correct: [0, 2, 4] },
-      { type: 'kategori', text: STIMULUS.b7 + "33. Tentukan kesesuaian pernyataan dengan teks!", categories: ["Sesuai", "Tidak Sesuai"], statements: [{text:"Luas sebaran karang lebih dari setengah dasar samudra.", correct:1}, {text:"Coral bleaching dipicu kenaikan suhu air laut global.", correct:0}, {text:"Penyu memanfaatkan terumbu karang sbg rumah.", correct:0}] },
-      { type: 'pg', text: STIMULUS.b7 + "34. Makna kata 'abrasi' pada teks adalah...", options: ["Proses pasang surut air laut", "Pengikisan daerah pantai akibat hantaman ombak", "Pengendapan pasir ke muara", "Pemutihan karang akibat suhu panas", "Pencemaran limbah cair industri"], correct: 1 },
-      { type: 'pgk', text: STIMULUS.b7 + "35. Manakah yang merupakan Fakta (Bukan opini) di teks?", options: ["Karang mencakup < 1% dasar samudra", "Sungguh disayangkan ekosistem seindah ini rusak", "Karang jadi rumah >25% biota laut", "Menjaga karang jauh lebih mulia dari hutan", "Praktik bom ikan merusak karang"], correct: [0, 2, 4] },
-      { type: 'pg', text: STIMULUS.b8 + "36. Watak tokoh Bayu yang paling menonjol adalah...", options: ["Pemberani", "Jujur & teguh memegang amanah", "Penakut & ragu-ragu", "Pekerja keras", "Materialistis"], correct: 1 },
-      { type: 'pgk', text: STIMULUS.b8 + "37. Pernyataan yang menggambarkan Latar cerita:", options: ["Waktu sore hari jelang malam", "Tempat utama kebimbangan di toko buku", "Penemuan uang dekat warung Nek Suti", "Suasana awal diliputi pergolakan batin", "Akhir cerita pindah ke rumah ibu"], correct: [0, 2, 3] },
-      { type: 'kategori', text: STIMULUS.b8 + "38. Analisis konflik & amanat cerita!", categories: ["Benar", "Salah"], statements: [{text:"Konflik utamanya adalah konflik sosial fisik.", correct:1}, {text:"Amanat utama mengutamakan kejujuran di atas ego.", correct:0}, {text:"Nasihat ibu bertindak sbg pemicu resolusi Bayu.", correct:0}] },
-      { type: 'pg', text: STIMULUS.b8 + "39. Memicu konflik batin Bayu?", options: ["Keinginan beli buku berbenturan dengan nilai kejujuran.", "Takut jika ketahuan Nek Suti.", "Merasa bersalah gagal kejar bapak asing.", "Bingung memberi uang ke ibunya.", "Sedih melihat matahari tenggelam."], correct: 0 },
-      { type: 'pgk', text: STIMULUS.b8 + "40. Nilai karakter yang ditunjukkan Bayu:", options: ["Integritas", "Egoisme", "Tanggung jawab moral", "Kepatuhan terhadap petuah", "Materialistis"], correct: [0, 2, 3] },
-      { type: 'pg', text: STIMULUS.b9 + "41. Bahan yang krusial menyerap racun dan bau?", options: ["Kapas bersih", "Batu kerikil", "Arang aktif", "Pasir bersih", "Botol plastik"], correct: 2 },
-      { type: 'pgk', text: STIMULUS.b9 + "42. Manakah yang termasuk kata kerja Imperatif (Perintah)?", options: ["Siapkan", "Penyaring", "Masukkan", "Menetes", "Tuangkan"], correct: [0, 2, 4] },
-      { type: 'kategori', text: STIMULUS.b9 + "43. Evaluasi susunan lapisan alat!", categories: ["Benar", "Salah"], statements: [{text:"Kapas diletakkan paling dasar utk tahan lumpur halus.", correct:0}, {text:"Pasir di lapisan terbawah utk serap racun kimia.", correct:1}, {text:"Kerikil bertugas menyaring benda besar.", correct:0}] },
-      { type: 'pg', text: STIMULUS.b9 + "44. Dampak jika tidak menggunakan arang kayu?", options: ["Botol menyumbat", "Daun besar lolos", "Air tampak jernih, tapi bau & racun tertinggal", "Kapas paling bawah robek", "Botol plastik melunak"], correct: 2 },
-      { type: 'pgk', text: STIMULUS.b9 + "45. Prinsip kerja alat penjernih ini:", options: ["Urutan diletakkan bebas", "Setiap bahan punya fungsi spesifik", "Air hasil otomatis 100% aman diminum lgsg", "Memakai botol bekas adalah Reuse", "Memanfaatkan gaya gravitasi"], correct: [1, 3, 4] },
-      { type: 'pg', text: STIMULUS.b10 + "46. Unsur 'Apa' dan 'Di mana' pada berita di atas?", options: ["Ujian susulan di SD Cemerlang", "Kemenangan medali emas robotik di Seoul", "Kunjungan anak Indonesia di Seoul", "Pameran daur ulang di Jakarta", "Pelatihan sensor guru di Seoul"], correct: 1 },
-      { type: 'pgk', text: STIMULUS.b10 + "47. Kemampuan Green-Bot?", options: ["Otomatis pisah sampah organik, plastik, logam", "Mengolah sampah langsung jd pupuk", "Memakai sensor optik", "Bergerak keliling jalan", "Kecepatan dan akurasi tinggi"], correct: [0, 2, 4] },
-      { type: 'kategori', text: STIMULUS.b10 + "48. Tentukan Fakta atau Opini!", categories: ["Fakta", "Opini"], statements: [{text:"Siswa SD Cemerlang menang emas IYRC 2026.", correct:0}, {text:"Inovasi ini sebaiknya wajib diproduksi massal.", correct:1}, {text:"IYRC 2026 diikuti >500 peserta dr 30 negara.", correct:0}] },
-      { type: 'pg', text: STIMULUS.b10 + "49. Kalimat mengandung opini narasumber?", options: ["Dua siswa SD Cemerlang raih emas.", "Kompetisi diikuti >500 peserta.", "Robot mampu mendeteksi organik, plastik, dll.", "Kepsek berharap inovasi ini diproduksi massal.", "Green-Bot adalah purwarupa pemilah."], correct: 3 },
-      { type: 'pgk', text: STIMULUS.b10 + "50. Kesimpulan yang tepat dari berita:", options: ["Anak SD Indonesia mampu bersaing dunia", "Lomba ini rutin diadakan di Jakarta", "Ide Green-Bot adalah solusi nyata", "Menang krn pesaing minim", "Ketekunan membuahkan prestasi"], correct: [0, 2, 4] },
-      { type: 'pg', text: STIMULUS.b11 + "51. Berapa lama kantong plastik butuh waktu terurai?", options: ["< 10 tahun", "20 - 50 tahun", "75 tahun", "100 - 500 tahun", "> 1000 tahun"], correct: 3 },
-      { type: 'pgk', text: STIMULUS.b11 + "52. Tindakan yang mencerminkan Reuse (Gunakan Kembali):", options: ["Beli botol air baru", "Ubah botol bekas jd wadah pensil/pot", "Bawa tas belanja kain", "Pakai botol bekas utk pot gantung", "Bakar botol bekas"], correct: [1, 3] },
-      { type: 'kategori', text: STIMULUS.b11 + "53. Klasifikasikan tindakan 3R berikut!", categories: ["Sesuai Panduan", "Tidak Sesuai"], statements: [{text:"Tolak plastik dr kasir, pilih tas kain.", correct:0}, {text:"Campur organik & botol dlm satu wadah.", correct:1}, {text:"Salurkan botol ke bank sampah (Recycle).", correct:0}] },
-      { type: 'pg', text: STIMULUS.b11 + "54. Target utama jika Pilah dr Rumah sukses dijalankan?", options: ["Pabrik plastik baru tercipta", "Pembuangan ke TPA turun 40%", "Lautan bertambah luas", "Tanah tak perlu urai", "Harga tas kain murah"], correct: 1 },
-      { type: 'pgk', text: STIMULUS.b11 + "55. Mengapa penanganan dimulai dr rumah tangga?", options: ["Plastik butuh berabad-abad terurai", "Mengancam biota laut", "Dapat profit instan harian", "Rumah tangga = penyumbang besar", "Plastik mudah hancur kena UV"], correct: [0, 1, 3] },
-      { type: 'pg', text: STIMULUS.b12 + "56. Syarat awal pembentukan badai siklon tropis?", options: ["Suhu air laut di bawah 0", "Tekanan pusat sangat tinggi", "Gerhana matahari", "Suhu air laut hangat > 26,5 C", "Angin darat stabil"], correct: 3 },
-      { type: 'pgk', text: STIMULUS.b12 + "57. Dampak Efek Coriolis (Rotasi bumi) pada siklon?", options: ["Suhu air drop", "Membelokkan arah angin menuju pusat", "Membentuk pusaran melingkar", "Tahan uap air di laut", "Memperkuat intensitas badai"], correct: [1, 2, 4] },
-      { type: 'kategori', text: STIMULUS.b12 + "58. Analisis kausalitas (Sebab-Akibat) berikut!", categories: ["Benar", "Salah"], statements: [{text:"Penguapan masif bentuk area tekanan udara sangat rendah.", correct:0}, {text:"Angin mengalir menjauhi pusat tekanan rendah.", correct:1}, {text:"Siklon picu gelombang pasang merusak daratan.", correct:0}] },
-      { type: 'pg', text: STIMULUS.b12 + "59. Struktur penjelasan pada paragraf teks siklon ini tergolong...", options: ["Pernyataan Umum", "Deretan Penjelas", "Interpretasi", "Solusi", "Pesan Moral"], correct: 1 },
-      { type: 'pgk', text: STIMULUS.b12 + "60. Sebutan internasional lain untuk siklon tropis:", options: ["Tsunami", "Taifun", "Hurikan", "El Nino", "Badai gurun"], correct: [1, 2] }
+      { type: 'pg', level: 1, text: STIMULUS.b7 + "31. Mengapa terumbu karang dijuluki 'hutan hujan di bawah laut'?", options: ["Berada di area curah hujan tinggi", "Keanekaragaman hayati spesies yang sangat melimpah", "Bentuk fisiknya seperti pohon", "Menguasai sebagian besar laut", "Menghasilkan sumber air tawar"], correct: 1 },
+      { type: 'pgk', level: 1, text: STIMULUS.b7 + "32. Apa fungsi penting terumbu karang bagi lingkungan?", options: ["Pelindung pantai dari abrasi", "Menyaring limbah pabrik", "Tempat tinggal dan cari makan biota", "Menurunkan suhu laut global", "Meredam energi gelombang badai"], correct: [0, 2, 4] },
+      { type: 'kategori', level: 2, text: STIMULUS.b7 + "33. Tentukan kesesuaian pernyataan dengan teks!", categories: ["Sesuai", "Tidak Sesuai"], statements: [{text:"Luas sebaran karang lebih dari setengah dasar samudra.", correct:1}, {text:"Coral bleaching dipicu kenaikan suhu air laut global.", correct:0}, {text:"Penyu memanfaatkan terumbu karang sbg rumah.", correct:0}] },
+      { type: 'pg', level: 2, text: STIMULUS.b7 + "34. Makna kata 'abrasi' pada teks adalah...", options: ["Proses pasang surut air laut", "Pengikisan daerah pantai akibat hantaman ombak", "Pengendapan pasir ke muara", "Pemutihan karang akibat suhu panas", "Pencemaran limbah cair industri"], correct: 1 },
+      { type: 'pgk', level: 3, text: STIMULUS.b7 + "35. Manakah yang merupakan Fakta (Bukan opini) di teks?", options: ["Karang mencakup < 1% dasar samudra", "Sungguh disayangkan ekosistem seindah ini rusak", "Karang jadi rumah >25% biota laut", "Menjaga karang jauh lebih mulia dari hutan", "Praktik bom ikan merusak karang"], correct: [0, 2, 4] },
+      { type: 'pg', level: 1, text: STIMULUS.b8 + "36. Watak tokoh Bayu yang paling menonjol adalah...", options: ["Pemberani", "Jujur & teguh memegang amanah", "Penakut & ragu-ragu", "Pekerja keras", "Materialistis"], correct: 1 },
+      { type: 'pgk', level: 1, text: STIMULUS.b8 + "37. Pernyataan yang menggambarkan Latar cerita:", options: ["Waktu sore hari jelang malam", "Tempat utama kebimbangan di toko buku", "Penemuan uang dekat warung Nek Suti", "Suasana awal diliputi pergolakan batin", "Akhir cerita pindah ke rumah ibu"], correct: [0, 2, 3] },
+      { type: 'kategori', level: 3, text: STIMULUS.b8 + "38. Analisis konflik & amanat cerita!", categories: ["Benar", "Salah"], statements: [{text:"Konflik utamanya adalah konflik sosial fisik.", correct:1}, {text:"Amanat utama mengutamakan kejujuran di atas ego.", correct:0}, {text:"Nasihat ibu bertindak sbg pemicu resolusi Bayu.", correct:0}] },
+      { type: 'pg', level: 2, text: STIMULUS.b8 + "39. Memicu konflik batin Bayu?", options: ["Keinginan beli buku berbenturan dengan nilai kejujuran.", "Takut jika ketahuan Nek Suti.", "Merasa bersalah gagal kejar bapak asing.", "Bingung memberi uang ke ibunya.", "Sedih melihat matahari tenggelam."], correct: 0 },
+      { type: 'pgk', level: 2, text: STIMULUS.b8 + "40. Nilai karakter yang ditunjukkan Bayu:", options: ["Integritas", "Egoisme", "Tanggung jawab moral", "Kepatuhan terhadap petuah", "Materialistis"], correct: [0, 2, 3] },
+      { type: 'pg', level: 1, text: STIMULUS.b9 + "41. Bahan yang krusial menyerap racun dan bau?", options: ["Kapas bersih", "Batu kerikil", "Arang aktif", "Pasir bersih", "Botol plastik"], correct: 2 },
+      { type: 'pgk', level: 1, text: STIMULUS.b9 + "42. Manakah yang termasuk kata kerja Imperatif (Perintah)?", options: ["Siapkan", "Penyaring", "Masukkan", "Menetes", "Tuangkan"], correct: [0, 2, 4] },
+      { type: 'kategori', level: 2, text: STIMULUS.b9 + "43. Evaluasi susunan lapisan alat!", categories: ["Benar", "Salah"], statements: [{text:"Kapas diletakkan paling dasar utk tahan lumpur halus.", correct:0}, {text:"Pasir di lapisan terbawah utk serap racun kimia.", correct:1}, {text:"Kerikil bertugas menyaring benda besar.", correct:0}] },
+      { type: 'pg', level: 3, text: STIMULUS.b9 + "44. Dampak jika tidak menggunakan arang kayu?", options: ["Botol menyumbat", "Daun besar lolos", "Air tampak jernih, tapi bau & racun tertinggal", "Kapas paling bawah robek", "Botol plastik melunak"], correct: 2 },
+      { type: 'pgk', level: 3, text: STIMULUS.b9 + "45. Prinsip kerja alat penjernih ini:", options: ["Urutan diletakkan bebas", "Setiap bahan punya fungsi spesifik", "Air hasil otomatis 100% aman diminum lgsg", "Memakai botol bekas adalah Reuse", "Memanfaatkan gaya gravitasi"], correct: [1, 3, 4] },
+      { type: 'pg', level: 1, text: STIMULUS.b10 + "46. Unsur 'Apa' dan 'Di mana' pada berita di atas?", options: ["Ujian susulan di SD Cemerlang", "Kemenangan medali emas robotik di Seoul", "Kunjungan anak Indonesia di Seoul", "Pameran daur ulang di Jakarta", "Pelatihan sensor guru di Seoul"], correct: 1 },
+      { type: 'pgk', level: 1, text: STIMULUS.b10 + "47. Kemampuan Green-Bot?", options: ["Otomatis pisah sampah organik, plastik, logam", "Mengolah sampah langsung jd pupuk", "Memakai sensor optik", "Bergerak keliling jalan", "Kecepatan dan akurasi tinggi"], correct: [0, 2, 4] },
+      { type: 'kategori', level: 2, text: STIMULUS.b10 + "48. Tentukan Fakta atau Opini!", categories: ["Fakta", "Opini"], statements: [{text:"Siswa SD Cemerlang menang emas IYRC 2026.", correct:0}, {text:"Inovasi ini sebaiknya wajib diproduksi massal.", correct:1}, {text:"IYRC 2026 diikuti >500 peserta dr 30 negara.", correct:0}] },
+      { type: 'pg', level: 2, text: STIMULUS.b10 + "49. Kalimat mengandung opini narasumber?", options: ["Dua siswa SD Cemerlang raih emas.", "Kompetisi diikuti >500 peserta.", "Robot mampu mendeteksi organik, plastik, dll.", "Kepsek berharap inovasi ini diproduksi massal.", "Green-Bot adalah purwarupa pemilah."], correct: 3 },
+      { type: 'pgk', level: 3, text: STIMULUS.b10 + "50. Kesimpulan yang tepat dari berita:", options: ["Anak SD Indonesia mampu bersaing dunia", "Lomba ini rutin diadakan di Jakarta", "Ide Green-Bot adalah solusi nyata", "Menang krn pesaing minim", "Ketekunan membuahkan prestasi"], correct: [0, 2, 4] },
+      { type: 'pg', level: 1, text: STIMULUS.b11 + "51. Berapa lama kantong plastik butuh waktu terurai?", options: ["< 10 tahun", "20 - 50 tahun", "75 tahun", "100 - 500 tahun", "> 1000 tahun"], correct: 3 },
+      { type: 'pgk', level: 2, text: STIMULUS.b11 + "52. Tindakan yang mencerminkan Reuse (Gunakan Kembali):", options: ["Beli botol air baru", "Ubah botol bekas jd wadah pensil/pot", "Bawa tas belanja kain", "Pakai botol bekas utk pot gantung", "Bakar botol bekas"], correct: [1, 3] },
+      { type: 'kategori', level: 3, text: STIMULUS.b11 + "53. Klasifikasikan tindakan 3R berikut!", categories: ["Sesuai Panduan", "Tidak Sesuai"], statements: [{text:"Tolak plastik dr kasir, pilih tas kain.", correct:0}, {text:"Campur organik & botol dlm satu wadah.", correct:1}, {text:"Salurkan botol ke bank sampah (Recycle).", correct:0}] },
+      { type: 'pg', level: 1, text: STIMULUS.b11 + "54. Target utama jika Pilah dr Rumah sukses dijalankan?", options: ["Pabrik plastik baru tercipta", "Pembuangan ke TPA turun 40%", "Lautan bertambah luas", "Tanah tak perlu urai", "Harga tas kain murah"], correct: 1 },
+      { type: 'pgk', level: 2, text: STIMULUS.b11 + "55. Mengapa penanganan dimulai dr rumah tangga?", options: ["Plastik butuh berabad-abad terurai", "Mengancam biota laut", "Dapat profit instan harian", "Rumah tangga = penyumbang besar", "Plastik mudah hancur kena UV"], correct: [0, 1, 3] },
+      { type: 'pg', level: 1, text: STIMULUS.b12 + "56. Syarat awal pembentukan badai siklon tropis?", options: ["Suhu air laut di bawah 0", "Tekanan pusat sangat tinggi", "Gerhana matahari", "Suhu air laut hangat > 26,5 C", "Angin darat stabil"], correct: 3 },
+      { type: 'pgk', level: 2, text: STIMULUS.b12 + "57. Dampak Efek Coriolis (Rotasi bumi) pada siklon?", options: ["Suhu air drop", "Membelokkan arah angin menuju pusat", "Membentuk pusaran melingkar", "Tahan uap air di laut", "Memperkuat intensitas badai"], correct: [1, 2, 4] },
+      { type: 'kategori', level: 3, text: STIMULUS.b12 + "58. Analisis kausalitas (Sebab-Akibat) berikut!", categories: ["Benar", "Salah"], statements: [{text:"Penguapan masif bentuk area tekanan udara sangat rendah.", correct:0}, {text:"Angin mengalir menjauhi pusat tekanan rendah.", correct:1}, {text:"Siklon picu gelombang pasang merusak daratan.", correct:0}] },
+      { type: 'pg', level: 3, text: STIMULUS.b12 + "59. Struktur penjelasan pada paragraf teks siklon ini tergolong...", options: ["Pernyataan Umum", "Deretan Penjelas", "Interpretasi", "Solusi", "Pesan Moral"], correct: 1 },
+      { type: 'pgk', level: 1, text: STIMULUS.b12 + "60. Sebutan internasional lain untuk siklon tropis:", options: ["Tsunami", "Taifun", "Hurikan", "El Nino", "Badai gurun"], correct: [1, 2] }
     ]
   }
 };
@@ -759,7 +764,6 @@ el("loginForm").addEventListener("submit", (e) => {
   el("loginError").classList.remove("show");
   state.subjectKey = el("inpMapel").value;
   
-  // LOGIKA PEMISAHAN DATABASE AKTIF
   const DB = isBetaActive ? SUBJECTS_BETA : SUBJECTS_NORMAL;
   state.questions = DB[state.subjectKey].questions; 
   state.duration = DB[state.subjectKey].duration;
@@ -837,6 +841,12 @@ function renderQuestion(){
   const i = state.current, q = state.questions[i];
   el("qProgress").textContent = `SOAL ${i+1} DARI ${state.questions.length}`;
   el("examProgressLabel").textContent = `Soal ${i+1} / ${state.questions.length}`;
+  
+  // Tampilkan badge Level Kognitif
+  el("qLevelBadge").textContent = `Level ${q.level}`;
+  if(q.level === 3) el("qLevelBadge").style.color = "var(--gold-accent)"; 
+  else el("qLevelBadge").style.color = "var(--sky-accent)";
+  
   el("qText").innerHTML = q.text; 
   el("qText").parentElement.scrollTop = 0;
   
@@ -924,7 +934,7 @@ function triggerCheat(reason) {
 }
 el("btnKembaliCheat").onclick = () => { const cm = el("cheatModal"); cm.classList.remove("active"); setTimeout(() => { cm.style.display = "none"; state.warning = false; }, 400); if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{}); };
 
-/* --- FINISH --- */
+/* --- FINISH EXAM & IRT SIMULATION LOGIC --- */
 function countAnswered() {
   let a=0;
   state.questions.forEach((q,i) => {
@@ -949,6 +959,7 @@ el("btnKonfirmasiSelesai").onclick = () => { const cm = el("confirmModal"); cm.c
 function finishExam(){
   clearInterval(state.timerInterval);
   let benar = 0, salah = 0, kosong = 0; 
+  let totalBobotIRT = 0, bobotSiswa = 0;
   const reviewHtml = [];
   
   state.questions.forEach((q, i) => {
@@ -957,6 +968,13 @@ function finishExam(){
     let explanationText = "";
     const letters = ["A","B","C","D","E"];
     const cleanText = q.text.replace(/<[^>]*>?/gm, ' ').substring(0, 80) + "...";
+    
+    // PEMBOBOTAN DINAMIS IRT BERDASARKAN LEVEL KOGNITIF
+    let bobotSoal = 1.00; // Default Level 1
+    if (q.level === 2) bobotSoal = 1.25;
+    else if (q.level === 3) bobotSoal = 1.50;
+    
+    totalBobotIRT += bobotSoal;
     
     if (q.type === 'pg') {
       explanationText = `Kunci: ${letters[q.correct]}`;
@@ -983,21 +1001,25 @@ function finishExam(){
       }
     }
 
+    // Eksekusi penambahan bobot nilai ke siswa jika benar
+    if (isCorrect) bobotSiswa += bobotSoal;
+
     // REVIEW LIST BUILDER (HANYA UNTUK BETA)
     if(isBetaActive) {
       if(ans === undefined || (q.type === 'pgk' && ans.length === 0) || (q.type === 'kategori' && Object.keys(ans).length < q.statements.length)) {
-        reviewHtml.push(`<div class="review-item"><div class="rt">${i+1}. ${cleanText}</div><div class="ra">Kosong. ${explanationText}</div></div>`);
+        reviewHtml.push(`<div class="review-item"><div class="rt">${i+1}. [Lv.${q.level}] ${cleanText}</div><div class="ra">Kosong. ${explanationText}</div></div>`);
       } else if(isCorrect) {
-        reviewHtml.push(`<div class="review-item"><div class="rt">${i+1}. ${cleanText}</div><div class="ra" style="color:#8ff0c6;">Benar. ${explanationText}</div></div>`);
+        reviewHtml.push(`<div class="review-item"><div class="rt">${i+1}. [Lv.${q.level}] ${cleanText}</div><div class="ra" style="color:#8ff0c6;">Benar. ${explanationText}</div></div>`);
       } else {
-        reviewHtml.push(`<div class="review-item wrong"><div class="rt">${i+1}. ${cleanText}</div><div class="ra" style="color:#ffb3b3;">Salah. ${explanationText}</div></div>`);
+        reviewHtml.push(`<div class="review-item wrong"><div class="rt">${i+1}. [Lv.${q.level}] ${cleanText}</div><div class="ra" style="color:#ffb3b3;">Salah. ${explanationText}</div></div>`);
       }
     }
   });
 
-  let rawScore = (benar / state.questions.length) * 100;
+  // RAW SCORE BERDASARKAN PEMBOBOTAN IRT
+  let rawScore = (bobotSiswa / totalBobotIRT) * 100;
   
-  // LOGIKA PEMISAHAN HASIL (BETA = SCORE + REVIEW, NORMAL = SCORE + PREDIKAT)
+  // LOGIKA PEMISAHAN HASIL
   let box = el("motivationBox"); 
   if (isBetaActive) {
       box.style.display = "none";
