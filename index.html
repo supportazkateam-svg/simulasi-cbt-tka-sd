@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="docTitle">CBT TKA SD 2026 - Beta</title>
+<title id="docTitle">CBT TKA SD 2026</title>
 <meta name="description" content="Platform resmi Simulasi CBT Tes Kemampuan Akademik (TKA) SD 2026. Latihan soal terstruktur dengan sistem pengamanan ujian terpadu.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -672,7 +672,7 @@ const SUBJECTS_BETA = {
 /* --- DATABASE SOAL NORMAL (60 SOAL ASLI) DENGAN LEVEL IRT --- */
 const SUBJECTS_NORMAL = {
   matematika: {
-    label: "Matematika (Numerasi)", duration: 120 * 60,
+    label: "Matematika (Numerasi)", duration: 75 * 60,
     questions: [
       { type: 'pg', level: 1, text: STIMULUS.m1 + "1. Berdasarkan tabel, peningkatan produksi padi tertinggi terjadi pada periode tahun...", options: ["2021 ke 2022", "2022 ke 2023", "2023 ke 2024", "2024 ke 2025", "Tidak ada peningkatan"], correct: 2 },
       { type: 'pgk', level: 2, text: STIMULUS.m1 + "2. Berdasarkan data, pernyataan manakah saja yang bernilai benar?", options: ["Produksi jagung selalu mengalami penurunan", "Penurunan jagung hanya di tahun 2022 dan 2025", "Total produksi gabungan tertinggi di 2024", "Produksi padi tidak pernah turun", "Pada 2023, hasil panen jagung naik 20 ton"], correct: [1, 2, 4] },
@@ -707,7 +707,7 @@ const SUBJECTS_NORMAL = {
     ]
   },
   bindo: {
-    label: "Bahasa Indonesia (Literasi)", duration: 120 * 60,
+    label: "Bahasa Indonesia (Literasi)", duration: 75 * 60,
     questions: [
       { type: 'pg', level: 1, text: STIMULUS.b7 + "31. Mengapa terumbu karang dijuluki 'hutan hujan di bawah laut'?", options: ["Berada di area curah hujan tinggi", "Keanekaragaman hayati spesies yang sangat melimpah", "Bentuk fisiknya seperti pohon", "Menguasai sebagian besar laut", "Menghasilkan sumber air tawar"], correct: 1 },
       { type: 'pgk', level: 1, text: STIMULUS.b7 + "32. Apa fungsi penting terumbu karang bagi lingkungan?", options: ["Pelindung pantai dari abrasi", "Menyaring limbah pabrik", "Tempat tinggal dan cari makan biota", "Menurunkan suhu laut global", "Meredam energi gelombang badai"], correct: [0, 2, 4] },
